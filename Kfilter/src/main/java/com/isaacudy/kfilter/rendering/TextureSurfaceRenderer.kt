@@ -25,7 +25,6 @@ private const val LOG_TAG = "SurfaceTest.GL"
  *
  *
  * This class has to be subclassed to be used properly
-
  * @param texture Surface texture on which to render. This has to be called AFTER the texture became available
  * @param width   Width of the passed surface
  * @param height  Height of the passed surface
@@ -42,13 +41,13 @@ internal abstract class TextureSurfaceRenderer(private val texture: SurfaceTextu
 
     private val config: IntArray
         get() = intArrayOf(
-            EGL14.EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
-            EGL14.EGL_SURFACE_TYPE, EGL14.EGL_PBUFFER_BIT,
-            EGL14.EGL_RED_SIZE, 8,
-            EGL14.EGL_GREEN_SIZE, 8,
-            EGL14.EGL_BLUE_SIZE, 8,
-            EGL14.EGL_ALPHA_SIZE, 8,
-            EGL14.EGL_NONE)
+                EGL14.EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
+                EGL14.EGL_SURFACE_TYPE, EGL14.EGL_PBUFFER_BIT,
+                EGL14.EGL_RED_SIZE, 8,
+                EGL14.EGL_GREEN_SIZE, 8,
+                EGL14.EGL_BLUE_SIZE, 8,
+                EGL14.EGL_ALPHA_SIZE, 8,
+                EGL14.EGL_NONE)
 
     init {
         this.running = true
