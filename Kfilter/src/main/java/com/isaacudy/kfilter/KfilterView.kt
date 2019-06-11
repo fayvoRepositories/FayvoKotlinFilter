@@ -43,6 +43,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
         }
     var onErrorListener: (errorCode: Int) -> Unit = { Log.e("KfilterView", "ERROR: $it") }
     private var lastError = ERROR_NO_ERROR
+    var selectedKfilterStart = 0
 
     private val gestureDetector = GestureDetector(context, GestureListener())
     var gesturesEnabled = true
@@ -438,7 +439,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
 
     private inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
 
-        var selectedKfilterStart = 0
+       
 
         override fun onDown(e: MotionEvent?): Boolean {
             selectedKfilterStart = selectedKfilter
@@ -477,5 +478,33 @@ class KfilterView @JvmOverloads constructor(context: Context,
             kfilterOffset = selectedKfilterStart + distance
             return true
         }
+    }
+
+    fun onDown(): Boolean {
+        selectedKfilterStart = selectedKfilter
+        return true
+    }
+
+    
+
+    fun onFling(velocityX: Float): Boolean {
+        val direction = if (velocityX < 0) 1 else -1
+        if (Math.abs(velocityX) > 1000) {
+            offsetAnimator?.apply { cancel() }
+            offsetAnimator = null
+
+            offsetAnimator = ValueAnimator.ofFloat(kfilterOffset, (selectedKfilterStart + direction).toFloat()).setDuration(225)
+            offsetAnimator?.addUpdateListener {
+                kfilterOffset = it.animatedValue as Float
+            }
+            offsetAnimator?.start()
+        }
+        return true
+    }
+
+    fun onScroll(e1: MotionEvent, e2: MotionEvent): Boolean {
+        val distance = (e1.x - e2.x) / surfaceWidth
+        kfilterOffset = selectedKfilterStart + distance
+        return true
     }
 }
