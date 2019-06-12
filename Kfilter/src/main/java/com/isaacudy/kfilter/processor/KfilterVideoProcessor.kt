@@ -12,7 +12,9 @@ import java.io.File
 private const val TAG = "KfilterVideoProcessor"
 private const val VERBOSE = true
 
-internal class KfilterVideoProcessor(val shader: Kfilter, val mediaFile: KfilterMediaFile, val pathOut: String) : KfilterProcessor.Delegate() {
+internal class KfilterVideoProcessor(val shader: Kfilter,
+                                     val mediaFile: KfilterMediaFile, val pathOut: String
+                                     , val saveFile: KfilterProcessor.SaveFile) : KfilterProcessor.Delegate() {
 
     private val path = mediaFile.path
     private val tempPathOut = pathOut+".tmp"
@@ -26,10 +28,10 @@ internal class KfilterVideoProcessor(val shader: Kfilter, val mediaFile: Kfilter
     }
 
     override fun execute() {
-        Executor().execute()
+        Executor(saveFile).execute()
     }
 
-    private inner class Executor {
+    private inner class Executor(saveFile: KfilterProcessor.SaveFile) {
         val outputFormat: MediaFormat
         var encoder: MediaCodec
         val inputSurface: InputSurface
@@ -209,10 +211,13 @@ internal class KfilterVideoProcessor(val shader: Kfilter, val mediaFile: Kfilter
             onProgress(1.0f)
             try {
                 File(tempPathOut).renameTo(File(pathOut))
+                saveFile.save(pathOut);
             }
             catch (e: Exception){
+                saveFile.error(e.toString());
                 onError(e)
             }
+            Log.d("Output path", pathOut)
             onSuccess()
         }
 
