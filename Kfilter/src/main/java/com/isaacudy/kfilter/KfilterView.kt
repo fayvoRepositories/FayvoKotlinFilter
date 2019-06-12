@@ -217,6 +217,13 @@ class KfilterView @JvmOverloads constructor(context: Context,
         }
     }
 
+    public fun isPlaying(): Boolean? {
+        if(mediaPlayer != null){
+            return mediaPlayer?.isPlaying    
+        }
+        return false;
+    }
+      
     //region Rendering
     private fun openContent() {
         synchronized(this) {
