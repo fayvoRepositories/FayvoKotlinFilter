@@ -11,6 +11,7 @@ class KfilterProcessor(kfilter: Kfilter, path: String) {
     private val kfilter = kfilter.copy()
     private val mediaFile = KfilterMediaFile(path)
 
+
     var onError: (error: Exception) -> Unit = {
         Log.e(TAG, "KfilterProcessor encountered an error", it)
     }
@@ -19,11 +20,11 @@ class KfilterProcessor(kfilter: Kfilter, path: String) {
 
     private var activeThread: Thread? = null
 
-    fun save(saveFile: File){
-        save(saveFile.absolutePath)
+    fun save(saveFilePath: File, saveFile: SaveFile){
+        save(saveFilePath.absolutePath, saveFile)
     }
 
-    fun save(savePath: String){
+    fun save(savePath: String, saveFile: SaveFile){
         val finalPath = getSavePathWithExtension(mediaFile.mediaType, savePath)
         if(activeThread?.isAlive == true){
             throw IllegalStateException("This KfilterProcessor is active. Cannot trigger another save action at this time.")
@@ -35,10 +36,10 @@ class KfilterProcessor(kfilter: Kfilter, path: String) {
         }
 
         val delegate = if(mediaFile.mediaType == MediaType.IMAGE){
-            KfilterImageProcessor(kfilter, mediaFile, finalPath)
+            KfilterImageProcessor(kfilter, mediaFile, finalPath, saveFile)
         }
         else {
-            KfilterVideoProcessor(kfilter, mediaFile, finalPath)
+            KfilterVideoProcessor(kfilter, mediaFile, finalPath, saveFile)
         }
 
         delegate.onError = { onError(it) }
@@ -63,6 +64,11 @@ class KfilterProcessor(kfilter: Kfilter, path: String) {
         var onProgress: (progress: Float) -> Unit = {}
 
         abstract fun execute()
+    }
+
+    interface SaveFile {
+        fun save(path : String)
+        fun error(error : String)
     }
 }
 
