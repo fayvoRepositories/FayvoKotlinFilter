@@ -3,6 +3,7 @@ package com.isaacudy.kfilter.processor
 import android.graphics.Bitmap
 import com.isaacudy.kfilter.rendering.OutputSurface
 import android.opengl.*
+import android.util.Log
 import com.isaacudy.kfilter.*
 import com.isaacudy.kfilter.utils.checkGlError
 import com.isaacudy.kfilter.utils.loadBitmap
@@ -10,7 +11,9 @@ import java.io.BufferedOutputStream
 import java.io.FileOutputStream
 import java.nio.IntBuffer
 
-internal class KfilterImageProcessor(val shader: Kfilter, val mediaFile: KfilterMediaFile, val pathOut: String) : KfilterProcessor.Delegate(){
+internal class KfilterImageProcessor(val shader: Kfilter,
+                                     val mediaFile: KfilterMediaFile,
+                                     val pathOut: String, val saveFile : KfilterProcessor.SaveFile) : KfilterProcessor.Delegate(){
 
     override fun execute() {
         Executor().execute()
@@ -63,6 +66,10 @@ internal class KfilterImageProcessor(val shader: Kfilter, val mediaFile: Kfilter
                 bmp.copyPixelsFromBuffer(flippedBuffer)
                 bmp.compress(Bitmap.CompressFormat.PNG, 90, bos)
                 bmp.recycle()
+                Log.d("Output path", pathOut)
+                saveFile.save(pathOut)
+            }catch (e : Exception){
+                saveFile.error(e.toString())
             }
             finally {
                 if (bos != null) bos.close()
