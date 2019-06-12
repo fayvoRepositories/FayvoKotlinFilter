@@ -444,10 +444,20 @@ class KfilterView @JvmOverloads constructor(context: Context,
         }
     }
 
+    public fun play(){
+        mediaPlayer?.let {
+            it.start()
+        }
+    }
+
+    public fun pause(){
+        mediaPlayer?.let {
+            it.pause()
+        }
+    }
+      
     private inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
-
-       
-
+      
         override fun onDown(e: MotionEvent?): Boolean {
             selectedKfilterStart = selectedKfilter
             return super.onDown(e)
