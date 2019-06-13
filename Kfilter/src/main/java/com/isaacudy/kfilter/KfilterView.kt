@@ -278,7 +278,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
         surface = Surface(videoTexture)
     }
 
-    private fun releaseRenderingResources() {
+    public fun releaseRenderingResources() {
         kfilters.forEach { it.release() }
         mediaRenderer?.release()
         mediaRenderer = null
