@@ -252,7 +252,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
         }
     }
 
-    private fun prepareRenderingResources() {
+    public fun prepareRenderingResources() {
         val texture = texture ?: return
 
         mediaRenderer = KfilterMediaRenderer(texture, surfaceWidth, surfaceHeight, externalTexture).apply {
