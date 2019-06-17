@@ -20,11 +20,19 @@ import android.view.TextureView
 import android.view.View
 import com.isaacudy.kfilter.BaseKfilter
 import com.isaacudy.kfilter.filters.*
+import com.isaacudy.kfilter.processor.KfilterProcessor
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import kotlin.concurrent.thread
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), KfilterProcessor.SaveFile {
+    override fun save(path: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun error(error: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     private val ACTIVITY_CHOOSE_FILE = 0
 
@@ -68,7 +76,7 @@ class MainActivity : AppCompatActivity() {
             File("storage/emulated/0/KfilterSample").apply {
                 if (!exists()) mkdirs()
             }
-            kfilterView.getProcessor()?.save("storage/emulated/0/KfilterSample/sample_${System.currentTimeMillis()}")
+            kfilterView.getProcessor()?.save("storage/emulated/0/KfilterSample/sample_${System.currentTimeMillis()}", this)
         }
     }
 

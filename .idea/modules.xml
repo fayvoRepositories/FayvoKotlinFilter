@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/Kfilter.iml" filepath="$PROJECT_DIR$/.idea/Kfilter.iml" />
       <module fileurl="file://$PROJECT_DIR$/Kfilter/Kfilter.iml" filepath="$PROJECT_DIR$/Kfilter/Kfilter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Kfilter/Kfilter-Kfilter.iml" filepath="$PROJECT_DIR$/Kfilter/Kfilter-Kfilter.iml" />
       <module fileurl="file://$PROJECT_DIR$/KfilterProject.iml" filepath="$PROJECT_DIR$/KfilterProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/KfilterSample/KfilterSample.iml" filepath="$PROJECT_DIR$/KfilterSample/KfilterSample.iml" />
       <module fileurl="file://$PROJECT_DIR$/KfilterSample/KfilterSample.iml" filepath="$PROJECT_DIR$/KfilterSample/KfilterSample.iml" />
     </modules>
   </component>

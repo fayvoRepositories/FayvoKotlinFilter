@@ -138,7 +138,7 @@ internal class KfilterRenderer(val kfilter: Kfilter) {
         checkGlError("onDrawFrame start")
         st.getTransformMatrix(surfaceMatrix)
 
-        GLES20.glEnable(GLES11Ext.GL_TEXTURE_EXTERNAL_OES)
+        GLES20.glEnable(GLES20.GL_SCISSOR_TEST)
         var leftOffset = 0
         if (offset) leftOffset = (targetWidth * (1 - scissorAmount)).toInt()
         GLES20.glScissor(leftOffset, 0, (targetWidth * scissorAmount).toInt(), targetHeight)
