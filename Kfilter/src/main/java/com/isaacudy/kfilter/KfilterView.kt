@@ -230,7 +230,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
       
     //region Rendering
     private fun openContent() {
-        synchronized(this) {
+//        synchronized(this) {
             if (contentFile == null) {
                 return
             }
@@ -253,7 +253,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
                 MediaType.VIDEO -> openVideoContent()
                 else -> triggerError(ERROR_UNKNOWN_MEDIA_TYPE)
             }
-        }
+//        }
     }
 
     public fun prepareRenderingResources() {
