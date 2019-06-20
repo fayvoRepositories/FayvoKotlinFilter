@@ -54,6 +54,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
     val contentPath: String?
         get() = contentFile?.path
 
+    private var prepareMedia: PrepareMedia? = null
     private var renderThread: RenderThread? = null
     var mediaPlayer: MediaPlayer? = null
         private set
@@ -95,6 +96,9 @@ class KfilterView @JvmOverloads constructor(context: Context,
         }
     }
 
+    fun setPrepareMediaListener(prepareMedia: PrepareMedia){
+        this.prepareMedia = prepareMedia
+    }
     fun setContentPath(path: String) {
         contentFile = KfilterMediaFile(path)
         openContent()
@@ -308,8 +312,10 @@ class KfilterView @JvmOverloads constructor(context: Context,
                 setOnPreparedListener { mp ->
                     isPrepared = true
                     onPreparedListener(mp)
+                    prepareMedia?.readyMedia()
                 }
                 setOnErrorListener { _, what, extra ->
+                    prepareMedia?.error()
                     onErrorListener(ERROR_MEDIA_PLAYER)
                     false
                 }
@@ -436,6 +442,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
                 canvas.drawARGB(255, 0, 0, 0)
                 canvas.drawBitmap(bitmap, 0f, 0f, null)
                 unlockCanvasAndPost(canvas)
+                prepareMedia?.readyMedia()
             }
         }
 
@@ -523,5 +530,10 @@ class KfilterView @JvmOverloads constructor(context: Context,
         val distance = (e1.x - e2.x) / surfaceWidth
         kfilterOffset = selectedKfilterStart + distance
         return true
+    }
+
+    interface PrepareMedia{
+        fun readyMedia()
+        fun error()
     }
 }

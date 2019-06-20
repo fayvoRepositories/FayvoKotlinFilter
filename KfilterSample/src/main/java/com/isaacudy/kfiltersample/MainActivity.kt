@@ -15,17 +15,27 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
 import com.isaacudy.kfilter.BaseKfilter
+import com.isaacudy.kfilter.KfilterView
 import com.isaacudy.kfilter.filters.*
 import com.isaacudy.kfilter.processor.KfilterProcessor
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import kotlin.concurrent.thread
 
-class MainActivity : AppCompatActivity(), KfilterProcessor.SaveFile {
+class MainActivity : AppCompatActivity(), KfilterProcessor.SaveFile , KfilterView.PrepareMedia{
+    override fun readyMedia() {
+        Log.d("PrepareMedia", "true")
+    }
+
+    override fun error() {
+        Log.d("PrepareMedia", "false")
+    }
+
     override fun save(path: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -56,6 +66,7 @@ class MainActivity : AppCompatActivity(), KfilterProcessor.SaveFile {
 
         var item = 0
         kfilterView.setFilters(filters)
+        kfilterView.setPrepareMediaListener(this)
         selectFilter.setOnClickListener {
             item++
             if (item >= 3) {

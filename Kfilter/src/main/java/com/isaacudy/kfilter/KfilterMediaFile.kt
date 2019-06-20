@@ -1,5 +1,6 @@
 package com.isaacudy.kfilter
 
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.ExifInterface
 import android.media.MediaMetadataRetriever
