@@ -66,6 +66,7 @@ class MainActivity : AppCompatActivity(), KfilterProcessor.SaveFile , KfilterVie
 
         var item = 0
         kfilterView.setFilters(filters)
+        kfilterView.selectedKfilter
         kfilterView.setPrepareMediaListener(this)
         selectFilter.setOnClickListener {
             item++

@@ -230,7 +230,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
       
     //region Rendering
     private fun openContent() {
-//        synchronized(this) {
+        synchronized(this) {
             if (contentFile == null) {
                 return
             }
@@ -253,7 +253,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
                 MediaType.VIDEO -> openVideoContent()
                 else -> triggerError(ERROR_UNKNOWN_MEDIA_TYPE)
             }
-//        }
+        }
     }
 
     public fun prepareRenderingResources() {
@@ -466,6 +466,11 @@ class KfilterView @JvmOverloads constructor(context: Context,
     private inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
       
         override fun onDown(e: MotionEvent?): Boolean {
+            if(selectedKfilter == 0){
+                selectedKfilter = kfilters.size
+            }else if(selectedKfilter == kfilters.size-1){
+                selectedKfilter = 0
+            }
             selectedKfilterStart = selectedKfilter
             return super.onDown(e)
         }
@@ -493,6 +498,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
                     kfilterOffset = it.animatedValue as Float
                 }
                 offsetAnimator?.start()
+                Log.d("Position = ", selectedKfilter.toString())
             }
             return true
         }
@@ -500,11 +506,18 @@ class KfilterView @JvmOverloads constructor(context: Context,
         override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
             val distance = (e1.x - e2.x) / surfaceWidth
             kfilterOffset = selectedKfilterStart + distance
+//            Log.d("Position = ", selectedKfilter.toString())
             return true
         }
     }
 
     fun onDown(): Boolean {
+        if(selectedKfilter == 0){
+            selectedKfilter = kfilters.size
+        }else if(selectedKfilter == kfilters.size-1){
+            selectedKfilter = 0
+        }
+        selectedKfilterStart = selectedKfilter
         selectedKfilterStart = selectedKfilter
         return true
     }
