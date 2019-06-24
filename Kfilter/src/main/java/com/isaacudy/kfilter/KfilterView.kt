@@ -79,6 +79,8 @@ class KfilterView @JvmOverloads constructor(context: Context,
         }
     var selectedKfilter: Int
         get() {
+            if (Math.round(kfilterOffset) == kfilters.size)
+                return 0
             return Math.round(kfilterOffset)
         }
         set(value) {
