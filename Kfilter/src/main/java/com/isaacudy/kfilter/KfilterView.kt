@@ -148,6 +148,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
     }
 
     private fun applyKfilterOffset() {
+        Log.d("tabi_applyKfilterOffset ", "filterOffset = " + kfilterOffset.toString())
         var primary = selectedKfilter
         var secondary = Math.floor(kfilterOffset.toDouble()).toInt()
         if (primary == secondary) {
@@ -157,6 +158,8 @@ class KfilterView @JvmOverloads constructor(context: Context,
         if(primary < 0) primary = 0
         if(secondary < 0) secondary = 0
 
+        Log.d("tabi_applyKfilterOffset ", "primary = " + primary.toString() +
+                ",  "+"secondary = " + secondary.toString())
         mediaRenderer?.apply {
             var primaryKfilter: Kfilter = BaseKfilter()
             if(kfilters.size > primary){
@@ -170,6 +173,8 @@ class KfilterView @JvmOverloads constructor(context: Context,
 
             setKfilter(primaryKfilter, secondaryKfilter)
             filterOffset = (selectedKfilter - kfilterOffset)
+            Log.d("tabi_applyKfilterOffset ", "primary = " + primary.toString() +
+                    ",  "+"secondary = " + secondary.toString())
         }
     }
 
@@ -498,7 +503,8 @@ class KfilterView @JvmOverloads constructor(context: Context,
                     kfilterOffset = it.animatedValue as Float
                 }
                 offsetAnimator?.start()
-                Log.d("Position = ", selectedKfilter.toString())
+                Log.d("tabi_onFling = ", "selectedKfilter = " +selectedKfilter.toString()
+                        +" "+"kfilterOffset = " + kfilterOffset.toString() )
             }
             return true
         }
