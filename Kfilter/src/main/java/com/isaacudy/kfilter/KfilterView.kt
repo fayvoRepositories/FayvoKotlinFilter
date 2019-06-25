@@ -214,6 +214,17 @@ class KfilterView @JvmOverloads constructor(context: Context,
         return true
     }
 
+    fun touchEventUp(){
+        offsetAnimator?.apply { cancel() }
+        offsetAnimator = null
+
+        offsetAnimator = ValueAnimator.ofFloat(kfilterOffset, selectedKfilter.toFloat()).setDuration(225)
+        offsetAnimator?.addUpdateListener {
+            kfilterOffset = it.animatedValue as Float
+        }
+        offsetAnimator?.start()
+    }
+
     override fun onWindowFocusChanged(hasWindowFocus: Boolean) {
         super.onWindowFocusChanged(hasWindowFocus)
 
