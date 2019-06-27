@@ -45,7 +45,8 @@ class KfilterView @JvmOverloads constructor(context: Context,
     private var lastError = ERROR_NO_ERROR
     var selectedKfilterStart = 0
 
-    private val gestureDetector = GestureDetector(context, GestureListener())
+    val gestureDetector = GestureDetector(context, GestureListener())
+
     var gesturesEnabled = true
 
     private val kfilters = ArrayList<Kfilter>()
@@ -510,7 +511,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
 
         override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
             val direction = if (velocityX < 0) 1 else -1
-            if (Math.abs(velocityX) > 1000) {
+            if (Math.abs(velocityX) > 300) {
                 offsetAnimator?.apply { cancel() }
                 offsetAnimator = null
 
@@ -547,7 +548,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
 
     fun onFling(velocityX: Float): Boolean {
         val direction = if (velocityX < 0) 1 else -1
-        if (Math.abs(velocityX) > 200) {
+        if (Math.abs(velocityX) > 300) {
             offsetAnimator?.apply { cancel() }
             offsetAnimator = null
 

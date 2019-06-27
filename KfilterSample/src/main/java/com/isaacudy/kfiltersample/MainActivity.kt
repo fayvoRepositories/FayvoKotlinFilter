@@ -16,6 +16,7 @@ import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.GestureDetector
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
