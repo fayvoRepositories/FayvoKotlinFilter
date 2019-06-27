@@ -72,6 +72,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
     private var offsetAnimator: ValueAnimator? = null
     private var kfilterOffset = 0f
         set(value) {
+            Log.d("tabi_kfilterOffset", "kfilterOffset = "+kfilterOffset)
             field = value
             if (field > kfilters.size - 1) field = kfilters.size - 1f
             if (field < 0) field = 0f
@@ -200,6 +201,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
         }
 
         if (event.action == MotionEvent.ACTION_UP) {
+            Log.d("tabi_onTouch", "event up")
             offsetAnimator?.apply { cancel() }
             offsetAnimator = null
 
@@ -244,7 +246,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
         if(mediaPlayer != null){
             return mediaPlayer?.isPlaying    
         }
-        return false;
+        return false
     }
       
     //region Rendering
@@ -545,7 +547,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
 
     fun onFling(velocityX: Float): Boolean {
         val direction = if (velocityX < 0) 1 else -1
-        if (Math.abs(velocityX) > 1000) {
+        if (Math.abs(velocityX) > 200) {
             offsetAnimator?.apply { cancel() }
             offsetAnimator = null
 
