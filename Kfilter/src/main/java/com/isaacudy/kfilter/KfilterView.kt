@@ -214,7 +214,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
         return true
     }
 
-    fun touchEventUp(){
+    fun touchEventUp(event: MotionEvent){
         offsetAnimator?.apply { cancel() }
         offsetAnimator = null
 
@@ -223,6 +223,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
             kfilterOffset = it.animatedValue as Float
         }
         offsetAnimator?.start()
+        gestureDetector.onTouchEvent(event)
     }
 
     override fun onWindowFocusChanged(hasWindowFocus: Boolean) {
