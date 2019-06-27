@@ -219,6 +219,19 @@ class KfilterView @JvmOverloads constructor(context: Context,
         return true
     }
 
+
+    fun touchEventUp(event: MotionEvent){
+        offsetAnimator?.apply { cancel() }
+        offsetAnimator = null
+
+        offsetAnimator = ValueAnimator.ofFloat(kfilterOffset, selectedKfilter.toFloat()).setDuration(225)
+        offsetAnimator?.addUpdateListener {
+            kfilterOffset = it.animatedValue as Float
+        }
+        offsetAnimator?.start()
+        gestureDetector.onTouchEvent(event)
+    }
+
     fun touchEventUp(event: MotionEvent, direction : Int){
         offsetAnimator?.apply { cancel() }
         offsetAnimator = null
@@ -514,7 +527,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
         override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
             Log.d("tabi_onFling", "velocityX = "+velocityX)
             val direction = if (velocityX < 0) 1 else -1
-            if (Math.abs(velocityX) > 1500) {
+            if (Math.abs(velocityX) > 1000) {
                 offsetAnimator?.apply { cancel() }
                 offsetAnimator = null
 
@@ -552,7 +565,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
 
     fun onFling(velocityX: Float): Boolean {
         val direction = if (velocityX < 0) 1 else -1
-        if (Math.abs(velocityX) > 300) {
+        if (Math.abs(velocityX) > 400) {
             offsetAnimator?.apply { cancel() }
             offsetAnimator = null
 
