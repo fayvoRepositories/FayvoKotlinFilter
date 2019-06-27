@@ -206,6 +206,8 @@ class KfilterView @JvmOverloads constructor(context: Context,
             offsetAnimator?.apply { cancel() }
             offsetAnimator = null
 
+
+            //start
             offsetAnimator = ValueAnimator.ofFloat(kfilterOffset, selectedKfilter.toFloat()).setDuration(225)
             offsetAnimator?.addUpdateListener {
                 kfilterOffset = it.animatedValue as Float
@@ -217,11 +219,11 @@ class KfilterView @JvmOverloads constructor(context: Context,
         return true
     }
 
-    fun touchEventUp(event: MotionEvent){
+    fun touchEventUp(event: MotionEvent, direction : Int){
         offsetAnimator?.apply { cancel() }
         offsetAnimator = null
 
-        offsetAnimator = ValueAnimator.ofFloat(kfilterOffset, selectedKfilter.toFloat()).setDuration(225)
+        offsetAnimator = ValueAnimator.ofFloat(kfilterOffset, (selectedKfilterStart + direction).toFloat()).setDuration(225)
         offsetAnimator?.addUpdateListener {
             kfilterOffset = it.animatedValue as Float
         }
@@ -510,11 +512,13 @@ class KfilterView @JvmOverloads constructor(context: Context,
         }
 
         override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
+            Log.d("tabi_onFling", "velocityX = "+velocityX)
             val direction = if (velocityX < 0) 1 else -1
-            if (Math.abs(velocityX) > 300) {
+            if (Math.abs(velocityX) > 1500) {
                 offsetAnimator?.apply { cancel() }
                 offsetAnimator = null
 
+                //start
                 offsetAnimator = ValueAnimator.ofFloat(kfilterOffset, (selectedKfilterStart + direction).toFloat()).setDuration(225)
                 offsetAnimator?.addUpdateListener {
                     kfilterOffset = it.animatedValue as Float
