@@ -537,7 +537,6 @@ class KfilterView @JvmOverloads constructor(context: Context,
             selectedKfilter = 0
         }
         selectedKfilterStart = selectedKfilter
-        selectedKfilterStart = selectedKfilter
         return true
     }
 
@@ -554,6 +553,8 @@ class KfilterView @JvmOverloads constructor(context: Context,
                 kfilterOffset = it.animatedValue as Float
             }
             offsetAnimator?.start()
+            Log.d("tabi_onFling = ", "selectedKfilter = " +selectedKfilter.toString()
+                    +" "+"kfilterOffset = " + kfilterOffset.toString() )
         }
         return true
     }

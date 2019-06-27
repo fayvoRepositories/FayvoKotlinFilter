@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import kotlin.concurrent.thread
 
-class MainActivity : AppCompatActivity(), KfilterProcessor.SaveFile , KfilterView.PrepareMedia{
+class MainActivity : AppCompatActivity(), KfilterProcessor.SaveFile, KfilterView.PrepareMedia {
     override fun readyMedia() {
         Log.d("PrepareMedia", "true")
     }
@@ -58,11 +58,13 @@ class MainActivity : AppCompatActivity(), KfilterProcessor.SaveFile , KfilterVie
 
 
         val filters = listOf(BaseKfilter(),
-            GrayscaleFilter(),
-            SepiaFilter(),
-            PosterizeFilter(),
-            WarmFilter(),
-            WobbleFilter())
+                BrightnessFilter(),
+                GrayscaleFilter(),
+                HueFilter(),
+                SepiaFilter(),
+                WarmFilter(),
+                BaseKfilter()
+        )
 
         var item = 0
         kfilterView.setFilters(filters)
@@ -132,8 +134,7 @@ fun getTestView(context: Context): View {
                     }
                     try {
                         Thread.sleep(20)
-                    }
-                    catch (ex: Exception) {
+                    } catch (ex: Exception) {
                     }
                 }
             }
@@ -177,16 +178,14 @@ fun getUriPath(context: Context, uri: Uri): String? {
             }
 
             // TODO handle non-primary volumes
-        }
-        else if (isDownloadsDocument(uri)) {
+        } else if (isDownloadsDocument(uri)) {
 
             val id = DocumentsContract.getDocumentId(uri)
             val contentUri = ContentUris.withAppendedId(
-                Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id)!!)
+                    Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id)!!)
 
             return getDataColumn(context, contentUri, null, null)
-        }
-        else if (isMediaDocument(uri)) {
+        } else if (isMediaDocument(uri)) {
             val docId = DocumentsContract.getDocumentId(uri)
             val split = docId.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             val type = split[0]
@@ -194,11 +193,9 @@ fun getUriPath(context: Context, uri: Uri): String? {
             var contentUri: Uri? = null
             if ("image" == type) {
                 contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-            }
-            else if ("video" == type) {
+            } else if ("video" == type) {
                 contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-            }
-            else if ("audio" == type) {
+            } else if ("audio" == type) {
                 contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
             }
 
@@ -208,11 +205,9 @@ fun getUriPath(context: Context, uri: Uri): String? {
             return getDataColumn(context, contentUri, selection, selectionArgs)
         }// MediaProvider
         // DownloadsProvider
-    }
-    else if ("content".equals(uri.scheme, ignoreCase = true)) {
+    } else if ("content".equals(uri.scheme, ignoreCase = true)) {
         return getDataColumn(context, uri, null, null)
-    }
-    else if ("file".equals(uri.scheme, ignoreCase = true)) {
+    } else if ("file".equals(uri.scheme, ignoreCase = true)) {
         return uri.path
     }// File
     // MediaStore (and general)
@@ -243,8 +238,7 @@ fun getDataColumn(context: Context, uri: Uri?, selection: String?,
             val columnIndex = cursor.getColumnIndexOrThrow(column)
             return cursor.getString(columnIndex)
         }
-    }
-    finally {
+    } finally {
         if (cursor != null)
             cursor.close()
     }
