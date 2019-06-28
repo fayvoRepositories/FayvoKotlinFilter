@@ -20,6 +20,7 @@ import android.view.GestureDetector
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
+import com.isaacudy.kfilter.AmaroFilter
 import com.isaacudy.kfilter.BaseKfilter
 import com.isaacudy.kfilter.KfilterView
 import com.isaacudy.kfilter.filters.*
@@ -59,6 +60,8 @@ class MainActivity : AppCompatActivity(), KfilterProcessor.SaveFile, KfilterView
 
 
         val filters = listOf(BaseKfilter(),
+                MonochromeFilter(),
+                AmaroFilter(),
                 BrightnessFilter(),
                 GrayscaleFilter(),
                 HueFilter(),

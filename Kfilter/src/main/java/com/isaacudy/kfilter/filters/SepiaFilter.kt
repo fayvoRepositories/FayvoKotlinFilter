@@ -10,6 +10,7 @@ class SepiaFilter : Kfilter() {
             precision mediump float;
             varying vec2 textureCoord;
             uniform samplerExternalOES externalTexture;
+            const highp vec3 weight = vec3(0.2125, 0.7154, 0.0721);
             void main() {
                 vec4 color = texture2D(externalTexture, textureCoord);
                 float outputRed =   min((color.r * .393) + (color.g *.769) + (color.b * .189), 1.0);
