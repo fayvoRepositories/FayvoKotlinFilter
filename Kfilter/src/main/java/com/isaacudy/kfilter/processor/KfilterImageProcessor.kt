@@ -64,7 +64,7 @@ internal class KfilterImageProcessor(val shader: Kfilter,
                 bos = BufferedOutputStream(FileOutputStream(pathOut))
                 val bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
                 bmp.copyPixelsFromBuffer(flippedBuffer)
-                bmp.compress(Bitmap.CompressFormat.JPEG, 90, bos)
+                bmp.compress(Bitmap.CompressFormat.PNG, 90, bos)
                 bmp.recycle()
                 Log.d("Output path", pathOut)
                 saveFile.save(pathOut)

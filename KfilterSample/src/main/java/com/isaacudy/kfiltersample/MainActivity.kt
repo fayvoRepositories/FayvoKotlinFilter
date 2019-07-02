@@ -39,11 +39,11 @@ class MainActivity : AppCompatActivity(), KfilterProcessor.SaveFile, KfilterView
     }
 
     override fun save(path: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Log.d("file save", path)
     }
 
     override fun error(error: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Log.d("file error", error)
     }
 
     private val ACTIVITY_CHOOSE_FILE = 0

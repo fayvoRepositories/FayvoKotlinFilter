@@ -211,7 +211,7 @@ internal class KfilterVideoProcessor(val shader: Kfilter,
             onProgress(1.0f)
             try {
                 File(tempPathOut).renameTo(File(pathOut))
-                saveFile.save(pathOut);
+                saveFile.save(pathOut)
             }
             catch (e: Exception){
                 saveFile.error(e.toString());

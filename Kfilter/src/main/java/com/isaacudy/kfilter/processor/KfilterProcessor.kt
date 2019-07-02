@@ -72,7 +72,7 @@ class KfilterProcessor(kfilter: Kfilter, path: String) {
     }
 }
 
-internal const val IMAGE_EXTENSION = ".jpg"
+internal const val IMAGE_EXTENSION = ".png"
 internal const val VIDEO_EXTENSION = ".mp4"
 
 internal fun getSavePathWithExtension(mediaType: MediaType, savePath: String): String {
