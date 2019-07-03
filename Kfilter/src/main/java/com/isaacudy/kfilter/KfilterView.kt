@@ -215,7 +215,9 @@ class KfilterView @JvmOverloads constructor(context: Context,
             offsetAnimator?.start()
         }
 
-        gestureDetector.onTouchEvent(event)
+        if(gestureDetector != null){
+            gestureDetector.onTouchEvent(event)
+        }
         return true
     }
 
