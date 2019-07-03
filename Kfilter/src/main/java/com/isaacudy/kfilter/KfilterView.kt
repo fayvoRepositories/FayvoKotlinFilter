@@ -73,7 +73,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
     private var offsetAnimator: ValueAnimator? = null
     private var kfilterOffset = 0f
         set(value) {
-            Log.d("tabi_kfilterOffset", "kfilterOffset = "+kfilterOffset)
+            Log.d("tabi_kfilterOffset", "kfilterOffset = " + kfilterOffset)
             field = value
             if (field > kfilters.size - 1) field = kfilters.size - 1f
             if (field < 0) field = 0f
@@ -122,7 +122,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
         selectedKfilter = 0
     }
 
-    fun getProcessor() : KfilterProcessor? {
+    fun getProcessor(): KfilterProcessor? {
         contentFile?.let {
             val selected = kfilters[selectedKfilter]
             return KfilterProcessor(selected, it.path)
@@ -159,26 +159,26 @@ class KfilterView @JvmOverloads constructor(context: Context,
             secondary = Math.ceil(kfilterOffset.toDouble()).toInt()
         }
 
-        if(primary < 0) primary = 0
-        if(secondary < 0) secondary = 0
+        if (primary < 0) primary = 0
+        if (secondary < 0) secondary = 0
 
         Log.d("tabi_applyKfilterOffset ", "primary = " + primary.toString() +
-                ",  "+"secondary = " + secondary.toString())
+                ",  " + "secondary = " + secondary.toString())
         mediaRenderer?.apply {
             var primaryKfilter: Kfilter = BaseKfilter()
-            if(kfilters.size > primary){
+            if (kfilters.size > primary) {
                 primaryKfilter = kfilters[primary]
             }
 
             var secondaryKfilter: Kfilter = BaseKfilter()
-            if(kfilters.size > primary){
+            if (kfilters.size > primary) {
                 secondaryKfilter = kfilters[secondary]
             }
 
             setKfilter(primaryKfilter, secondaryKfilter)
             filterOffset = (selectedKfilter - kfilterOffset)
             Log.d("tabi_applyKfilterOffset ", "primary = " + primary.toString() +
-                    ",  "+"secondary = " + secondary.toString())
+                    ",  " + "secondary = " + secondary.toString())
         }
     }
 
@@ -186,26 +186,24 @@ class KfilterView @JvmOverloads constructor(context: Context,
         if (lastError == errorCode) return  // only display each error once
         if (errorCode == ERROR_NO_ERROR) {
             lastError = errorCode // don't trigger error listener if the error is "no error"
-        }
-        else {
+        } else {
             onErrorListener(errorCode)
             lastError = errorCode
         }
     }
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (!gesturesEnabled) return false
 
-        if (event.action == MotionEvent.ACTION_DOWN) {
+        if (event!!.action == MotionEvent.ACTION_DOWN) {
             offsetAnimator?.apply { cancel() }
             offsetAnimator = null
         }
 
-        if (event.action == MotionEvent.ACTION_UP) {
+        if (event!!.action == MotionEvent.ACTION_UP) {
             Log.d("tabi_onTouch", "event up")
             offsetAnimator?.apply { cancel() }
             offsetAnimator = null
-
 
             //start
             offsetAnimator = ValueAnimator.ofFloat(kfilterOffset, selectedKfilter.toFloat()).setDuration(225)
@@ -215,12 +213,12 @@ class KfilterView @JvmOverloads constructor(context: Context,
             offsetAnimator?.start()
         }
 
-        gestureDetector.onTouchEvent(event)
+        gestureDetector!!.onTouchEvent(event)
         return true
     }
 
 
-    fun touchEventUp(event: MotionEvent){
+    fun touchEventUp(event: MotionEvent) {
         offsetAnimator?.apply { cancel() }
         offsetAnimator = null
 
@@ -232,7 +230,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
         gestureDetector.onTouchEvent(event)
     }
 
-    fun touchEventUp(event: MotionEvent, direction : Int){
+    fun touchEventUp(event: MotionEvent, direction: Int) {
         offsetAnimator?.apply { cancel() }
         offsetAnimator = null
 
@@ -248,23 +246,22 @@ class KfilterView @JvmOverloads constructor(context: Context,
         super.onWindowFocusChanged(hasWindowFocus)
 
         if (hasWindowFocus) {
-            if(isPlayingOnDetach){
+            if (isPlayingOnDetach) {
                 mediaPlayer?.start()
             }
-        }
-        else {
+        } else {
             isPlayingOnDetach = mediaPlayer?.isPlaying ?: false
             mediaPlayer?.pause()
         }
     }
 
     public fun isPlaying(): Boolean? {
-        if(mediaPlayer != null){
-            return mediaPlayer?.isPlaying    
+        if (mediaPlayer != null) {
+            return mediaPlayer?.isPlaying
         }
         return false
     }
-      
+
     //region Rendering
     private fun openContent() {
         synchronized(this) {
@@ -360,8 +357,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
             }
 
             renderThread = VideoRenderThread().apply { start() }
-        }
-        catch (e: IOException) {
+        } catch (e: IOException) {
             e.printStackTrace()
             triggerError(ERROR_MEDIA_PLAYER_CONFIGURE)
         }
@@ -426,8 +422,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
                                     }
                                 }
                                 lastRenderedPosition = kfilterOffset
-                            }
-                            catch (ex: Exception) {
+                            } catch (ex: Exception) {
                                 running = false
                                 onErrorListener(ERROR_RENDERING)
                             }
@@ -459,7 +454,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
      */
     private inner class VideoRenderThread : RenderThread() {
         override fun onPreRender() {
-            if(mediaPlayer == null){
+            if (mediaPlayer == null) {
                 running = false
             }
         }
@@ -488,24 +483,24 @@ class KfilterView @JvmOverloads constructor(context: Context,
         }
     }
 
-    public fun play(){
+    public fun play() {
         mediaPlayer?.let {
             it.start()
         }
     }
 
-    public fun pause(){
+    public fun pause() {
         mediaPlayer?.let {
             it.pause()
         }
     }
-      
+
     private inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
-      
+
         override fun onDown(e: MotionEvent?): Boolean {
-            if(selectedKfilter == 0){
+            if (selectedKfilter == 0) {
                 selectedKfilter = kfilters.size
-            }else if(selectedKfilter == kfilters.size-1){
+            } else if (selectedKfilter == kfilters.size - 1) {
                 selectedKfilter = 0
             }
             selectedKfilterStart = selectedKfilter
@@ -516,8 +511,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
             mediaPlayer?.let {
                 if (it.isPlaying) {
                     it.pause()
-                }
-                else {
+                } else {
                     it.start()
                 }
             }
@@ -525,7 +519,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
         }
 
         override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
-            Log.d("tabi_onFling", "velocityX = "+velocityX)
+            Log.d("tabi_onFling", "velocityX = " + velocityX)
             val direction = if (velocityX < 0) 1 else -1
             if (Math.abs(velocityX) > 1000) {
                 offsetAnimator?.apply { cancel() }
@@ -537,8 +531,8 @@ class KfilterView @JvmOverloads constructor(context: Context,
                     kfilterOffset = it.animatedValue as Float
                 }
                 offsetAnimator?.start()
-                Log.d("tabi_onFling = ", "selectedKfilter = " +selectedKfilter.toString()
-                        +" "+"kfilterOffset = " + kfilterOffset.toString() )
+                Log.d("tabi_onFling = ", "selectedKfilter = " + selectedKfilter.toString()
+                        + " " + "kfilterOffset = " + kfilterOffset.toString())
             }
             return true
         }
@@ -552,16 +546,15 @@ class KfilterView @JvmOverloads constructor(context: Context,
     }
 
     fun onDown(): Boolean {
-        if(selectedKfilter == 0){
+        if (selectedKfilter == 0) {
             selectedKfilter = kfilters.size
-        }else if(selectedKfilter == kfilters.size-1){
+        } else if (selectedKfilter == kfilters.size - 1) {
             selectedKfilter = 0
         }
         selectedKfilterStart = selectedKfilter
         return true
     }
 
-    
 
     fun onFling(velocityX: Float): Boolean {
         val direction = if (velocityX < 0) 1 else -1
@@ -574,8 +567,8 @@ class KfilterView @JvmOverloads constructor(context: Context,
                 kfilterOffset = it.animatedValue as Float
             }
             offsetAnimator?.start()
-            Log.d("tabi_onFling = ", "selectedKfilter = " +selectedKfilter.toString()
-                    +" "+"kfilterOffset = " + kfilterOffset.toString() )
+            Log.d("tabi_onFling = ", "selectedKfilter = " + selectedKfilter.toString()
+                    + " " + "kfilterOffset = " + kfilterOffset.toString())
         }
         return true
     }
@@ -586,7 +579,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
         return true
     }
 
-    interface PrepareMedia{
+    interface PrepareMedia {
         fun readyMedia()
         fun error()
     }
