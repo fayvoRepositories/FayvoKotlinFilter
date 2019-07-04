@@ -195,12 +195,12 @@ class KfilterView @JvmOverloads constructor(context: Context,
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (!gesturesEnabled) return false
 
-        if (event!!.action == MotionEvent.ACTION_DOWN) {
+        if (event?.action == MotionEvent.ACTION_DOWN) {
             offsetAnimator?.apply { cancel() }
             offsetAnimator = null
         }
 
-        if (event!!.action == MotionEvent.ACTION_UP) {
+        if (event?.action == MotionEvent.ACTION_UP) {
             Log.d("tabi_onTouch", "event up")
             offsetAnimator?.apply { cancel() }
             offsetAnimator = null
@@ -213,21 +213,29 @@ class KfilterView @JvmOverloads constructor(context: Context,
             offsetAnimator?.start()
         }
 
-        gestureDetector!!.onTouchEvent(event)
+        gestureDetector.onTouchEvent(event)
         return true
     }
 
 
     fun touchEventUp(event: MotionEvent) {
-        offsetAnimator?.apply { cancel() }
-        offsetAnimator = null
-
-        offsetAnimator = ValueAnimator.ofFloat(kfilterOffset, selectedKfilter.toFloat()).setDuration(225)
-        offsetAnimator?.addUpdateListener {
-            kfilterOffset = it.animatedValue as Float
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            offsetAnimator?.apply { cancel() }
+            offsetAnimator = null
         }
-        offsetAnimator?.start()
-        gestureDetector.onTouchEvent(event)
+
+        if (event.action == MotionEvent.ACTION_UP) {
+            Log.d("tabi_onTouch", "event up")
+            offsetAnimator?.apply { cancel() }
+            offsetAnimator = null
+
+            //start
+            offsetAnimator = ValueAnimator.ofFloat(kfilterOffset, selectedKfilter.toFloat()).setDuration(225)
+            offsetAnimator?.addUpdateListener {
+                kfilterOffset = it.animatedValue as Float
+            }
+            offsetAnimator?.start()
+        }
     }
 
     fun touchEventUp(event: MotionEvent, direction: Int) {
