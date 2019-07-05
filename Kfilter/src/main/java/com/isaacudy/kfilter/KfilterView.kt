@@ -529,7 +529,6 @@ class KfilterView @JvmOverloads constructor(context: Context,
         override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
             Log.d("tabi_onFling", "velocityX = " + velocityX)
 
-//            val xDistance : Float = Math.abs(e1.getX() - e2.getX())
             val yDistance : Float = Math.abs(e1.getY() - e2.getY())
 
             val velocityY1 = Math.abs(velocityY)
@@ -576,9 +575,20 @@ class KfilterView @JvmOverloads constructor(context: Context,
     }
 
 
-    fun onFling(velocityX: Float): Boolean {
+    fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
         val direction = if (velocityX < 0) 1 else -1
-        if (Math.abs(velocityX) > 400) {
+
+        val yDistance : Float = Math.abs(e1.getY() - e2.getY())
+
+        val velocityY1 = Math.abs(velocityY)
+        if(velocityY1 > 100 && yDistance > 100){
+            return if(e1.getY() > e2.getY()) // bottom to up
+                true
+            else
+                true
+        }
+
+        if (Math.abs(velocityX) > 1000) {
             offsetAnimator?.apply { cancel() }
             offsetAnimator = null
 
