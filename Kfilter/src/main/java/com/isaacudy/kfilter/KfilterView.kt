@@ -565,7 +565,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
             val yDistance: Float = Math.abs(e1.getY() - e2.getY())
 
             val velocityY1 = Math.abs(velocityY)
-            if (velocityY1 > 100 && yDistance > 100) {
+            if (velocityY1 > 400 && yDistance > 400) {
                 return if (e1.getY() > e2.getY()) // bottom to up
                     true
                 else
@@ -598,7 +598,8 @@ class KfilterView @JvmOverloads constructor(context: Context,
             }
 
             kfilterOffset = selectedKfilterStart + distance
-//            Log.d("Position = ", selectedKfilter.toString())
+            Log.d("Position = ", selectedKfilter.toString())
+            Log.d("kfilterOffset = ", kfilterOffset.toString())
             return true
         }
     }
