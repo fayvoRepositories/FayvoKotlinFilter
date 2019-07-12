@@ -97,6 +97,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
         onPreparedListener = { mediaPlayer ->
             mediaPlayer.isLooping = true
             mediaPlayer.seekTo(0)
+
 //            mediaPlayer.start()
         }
     }
@@ -364,7 +365,9 @@ class KfilterView @JvmOverloads constructor(context: Context,
                     onPreparedListener(mp)
                     prepareMedia?.readyMedia()
                 }
+
                 setOnErrorListener { _, what, extra ->
+                    retry()
                     prepareMedia?.error()
                     onErrorListener(ERROR_MEDIA_PLAYER)
                     false
@@ -379,6 +382,20 @@ class KfilterView @JvmOverloads constructor(context: Context,
         }
     }
 
+    private fun retry(){
+        mediaPlayer = MediaPlayer().apply {
+            setDataSource(contentFile!!.path)
+            setSurface(surface)
+            isLooping = true
+            setOnPreparedListener { mp ->
+                isPrepared = true
+                onPreparedListener(mp)
+                prepareMedia?.readyMedia()
+            }
+            prepareAsync()
+        }
+        renderThread = VideoRenderThread().apply { start() }
+    }
     private fun openImageContent() {
         renderThread = ImageRenderThread().apply { start() }
     }
