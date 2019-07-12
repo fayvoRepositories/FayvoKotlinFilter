@@ -113,10 +113,10 @@ internal abstract class TextureSurfaceRenderer(private val texture: SurfaceTextu
         val surfaceAttribs = intArrayOf(EGL14.EGL_NONE)
         eglSurface = EGL14.eglCreateWindowSurface(eglDisplay, eglConfig, texture, surfaceAttribs, 0)
         if (eglSurface == null || eglSurface == EGL14.EGL_NO_SURFACE) {
-            throw RuntimeException("GL Error: " + GLUtils.getEGLErrorString(EGL14.eglGetError()))
+//            throw RuntimeException("GL Error: " + GLUtils.getEGLErrorString(EGL14.eglGetError()))
         }
         if (!EGL14.eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext)) {
-            throw RuntimeException("GL Make current error: " + GLUtils.getEGLErrorString(EGL14.eglGetError()))
+//            throw RuntimeException("GL Make current error: " + GLUtils.getEGLErrorString(EGL14.eglGetError()))
         }
     }
 

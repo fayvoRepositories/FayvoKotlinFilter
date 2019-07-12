@@ -482,18 +482,30 @@ internal class KfilterVideoProcessor(val shader: Kfilter,
         if (extractor.videoFormat.containsKey(MediaFormat.KEY_WIDTH)) {
             width = extractor.videoFormat.getInteger(MediaFormat.KEY_WIDTH)
         }
+        Log.d("vide_info", "width = "+width)
 
         if (extractor.videoFormat.containsKey(MediaFormat.KEY_HEIGHT)) {
             height = extractor.videoFormat.getInteger(MediaFormat.KEY_HEIGHT)
         }
+        Log.d("vide_info", "height = "+height)
 
         if(extractor.videoFormat.containsKey(MediaFormat.KEY_FRAME_RATE)){
             frameRate = extractor.videoFormat.getInteger(MediaFormat.KEY_FRAME_RATE)
         }
 
+        Log.d("vide_info", "frameRate = "+frameRate)
+
         if(extractor.videoFormat.containsKey(MediaFormat.KEY_BIT_RATE)){
             bitrate = extractor.videoFormat.getInteger(MediaFormat.KEY_BIT_RATE)
         }
+
+        Log.d("vide_info", "bitrate = "+bitrate)
+        Log.d("vide_info", "COMPRESSION_LEVEL = "+extractor.videoFormat.getInteger(MediaFormat.KEY_FLAC_COMPRESSION_LEVEL))
+        Log.d("vide_info", "KEY_COLOR_FORMAT = "+extractor.videoFormat.getInteger(MediaFormat.KEY_COLOR_FORMAT))
+        Log.d("vide_info", "KEY_COLOR_RANGE = "+extractor.videoFormat.getInteger(MediaFormat.KEY_COLOR_RANGE))
+        Log.d("vide_info", "videoMimeType = "+extractor.videoMimeType)
+        Log.d("vide_info", "videoFormat = "+extractor.videoFormat)
+
 
         val format = MediaFormat.createVideoFormat(mimeType, width, height)
         format.setInteger(MediaFormat.KEY_COLOR_FORMAT, colorFormat)

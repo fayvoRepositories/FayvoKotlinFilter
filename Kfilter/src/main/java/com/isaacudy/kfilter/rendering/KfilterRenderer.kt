@@ -99,7 +99,7 @@ internal class KfilterRenderer(val kfilter: Kfilter) {
 
         program = createProgram(VERTEX_SHADER, kfilter.getShader())
         if (program == 0) {
-            throw RuntimeException("failed creating program")
+//            throw RuntimeException("failed creating program")
         }
 
         positionHandle = GLES20.glGetAttribLocation(program, "aPosition")
