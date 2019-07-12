@@ -374,7 +374,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
                 }
                 prepareAsync()
             }
-
+            mediaPlayer?.prepareAsync()
             renderThread = VideoRenderThread().apply { start() }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -383,18 +383,8 @@ class KfilterView @JvmOverloads constructor(context: Context,
     }
 
     private fun retry(){
-        mediaPlayer = MediaPlayer().apply {
-            setDataSource(contentFile!!.path)
-            setSurface(surface)
-            isLooping = true
-            setOnPreparedListener { mp ->
-                isPrepared = true
-                onPreparedListener(mp)
-                prepareMedia?.readyMedia()
-            }
-            prepareAsync()
-        }
-        renderThread = VideoRenderThread().apply { start() }
+        releaseRenderingResources()
+        setContentPath(contentFile!!.path)
     }
     private fun openImageContent() {
         renderThread = ImageRenderThread().apply { start() }
