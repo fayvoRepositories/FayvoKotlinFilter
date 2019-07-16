@@ -269,7 +269,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
     }
 
     fun touchEventUp(event: MotionEvent, direction: Int) {
-        /*isChange = false
+        isChange = false
         offsetAnimator?.apply { cancel() }
         offsetAnimator = null
 
@@ -278,8 +278,8 @@ class KfilterView @JvmOverloads constructor(context: Context,
             kfilterOffset = it.animatedValue as Float
         }
         offsetAnimator?.start()
-        gestureDetector.onTouchEvent(event)*/
-        if (event?.action == MotionEvent.ACTION_DOWN) {
+        gestureDetector.onTouchEvent(event)
+        /*if (event?.action == MotionEvent.ACTION_DOWN) {
             isChange = true
             offsetAnimator?.apply { cancel() }
             offsetAnimator = null
@@ -298,7 +298,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
                 kfilterOffset = it.animatedValue as Float
             }
             offsetAnimator?.start()
-        }
+        }*/
 
     }
 
