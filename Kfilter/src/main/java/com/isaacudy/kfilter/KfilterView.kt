@@ -97,7 +97,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
         onPreparedListener = { mediaPlayer ->
             mediaPlayer.isLooping = true
             mediaPlayer.seekTo(0)
-            mediaPlayer.start()
+//             mediaPlayer.start()
         }
     }
 
