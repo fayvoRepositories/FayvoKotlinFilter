@@ -50,7 +50,7 @@ fun checkGlError(op: String) {
     val error = GLES20.glGetError()
     if (error != GLES20.GL_NO_ERROR) {
         Log.e(TAG, op + ": glError " + error)
-//        throw RuntimeException(op + ": glError " + error)
+       throw RuntimeException(op + ": glError " + error)
     }
 }
 
