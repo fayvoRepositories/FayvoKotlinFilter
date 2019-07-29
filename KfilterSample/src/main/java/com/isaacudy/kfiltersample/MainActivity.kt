@@ -30,11 +30,14 @@ import java.io.File
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity(), KfilterProcessor.SaveFile, KfilterView.PrepareMedia {
+
+    lateinit var path : String
     override fun readyMedia() {
         Log.d("PrepareMedia", "true")
     }
 
     override fun error() {
+        kfilterView.setContentPath(path)
         Log.d("PrepareMedia", "false")
     }
 
@@ -102,6 +105,7 @@ class MainActivity : AppCompatActivity(), KfilterProcessor.SaveFile, KfilterView
         if (resultCode != Activity.RESULT_OK) return
         if (requestCode == ACTIVITY_CHOOSE_FILE) {
             getUriPath(this, data.data)?.let {
+                path = it
                 kfilterView.setContentPath(it)
             }
         }

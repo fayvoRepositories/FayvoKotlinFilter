@@ -149,10 +149,11 @@ internal class KfilterRenderer(val kfilter: Kfilter) {
     fun draw(milliseconds: Long, st: SurfaceTexture, scissorAmount: Float = 1f, offset: Boolean = false) {
         if (!initialised) initialise()
 
-        if(!checkGlError("onDrawFrame start")){
+        checkGlError("onDrawFrame start")
+        /*if(!checkGlError("onDrawFrame start")){
             prepareMedia?.error()
             return
-        }
+        }*/
         st.getTransformMatrix(surfaceMatrix)
 
         GLES20.glEnable(GLES20.GL_SCISSOR_TEST)
