@@ -358,6 +358,8 @@ class KfilterView @JvmOverloads constructor(context: Context,
             setKfilter(kfilters[selectedKfilter])
         }
 
+        mediaRenderer?.prepareMedia = prepareMedia
+
         var videoTexture: SurfaceTexture? = null
         val startTime = System.currentTimeMillis()
         while (videoTexture == null) {
@@ -543,6 +545,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
                 prepareMedia?.error()
             }
         }
+
 
         override fun onRelease() {
             bitmap.recycle()
@@ -746,7 +749,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
         return true
     }
 
-    interface PrepareMedia {
+    public interface PrepareMedia {
         fun readyMedia()
         fun error()
     }

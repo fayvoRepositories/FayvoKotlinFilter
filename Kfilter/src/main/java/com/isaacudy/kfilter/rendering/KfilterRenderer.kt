@@ -24,6 +24,7 @@ import android.opengl.Matrix
 import android.util.Log
 
 import com.isaacudy.kfilter.Kfilter
+import com.isaacudy.kfilter.KfilterView
 import com.isaacudy.kfilter.utils.*
 import java.nio.Buffer
 
@@ -82,6 +83,7 @@ internal class KfilterRenderer(val kfilter: Kfilter) {
 
     private var targetWidth: Int = kfilter.inputWidth
     private var targetHeight: Int = kfilter.inputHeight
+    public var prepareMedia: KfilterView.PrepareMedia? = null
 
     var initialised: Boolean = false
         private set
@@ -146,30 +148,42 @@ internal class KfilterRenderer(val kfilter: Kfilter) {
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
         GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT or GLES20.GL_COLOR_BUFFER_BIT)
         GLES20.glUseProgram(program)
-        checkGlError("glUseProgram")
+        if (!checkGlError("glUseProgram")){
+            prepareMedia?.error()
+        }
 
         kfilter.apply(milliseconds)
         GLES20.glGetError() // It appears "apply" can sometimes cause erroneous errors
 
         triangleVertices.position(TRIANGLE_VERTICES_DATA_POS_OFFSET)
         GLES20.glVertexAttribPointer(positionHandle, 3, GLES20.GL_FLOAT, false, TRIANGLE_VERTICES_DATA_STRIDE_BYTES, triangleVertices)
-        checkGlError("glVertexAttribPointer maPosition")
+        if(!checkGlError("glVertexAttribPointer maPosition")){
+            prepareMedia?.error()
+        }
 
         GLES20.glEnableVertexAttribArray(positionHandle)
-        checkGlError("glEnableVertexAttribArray positionHandle")
+        if(!checkGlError("glEnableVertexAttribArray positionHandle")){
+            prepareMedia?.error()
+        }
 
         triangleVertices.position(TRIANGLE_VERTICES_DATA_UV_OFFSET)
         GLES20.glVertexAttribPointer(textureHandle, 2, GLES20.GL_FLOAT, false, TRIANGLE_VERTICES_DATA_STRIDE_BYTES, triangleVertices)
-        checkGlError("glVertexAttribPointer textureHandle")
+        if(!checkGlError("glVertexAttribPointer textureHandle")){
+            prepareMedia?.error()
+        }
 
         GLES20.glEnableVertexAttribArray(textureHandle)
-        checkGlError("glEnableVertexAttribArray textureHandle")
+        if(!checkGlError("glEnableVertexAttribArray textureHandle")){
+            prepareMedia?.error()
+        }
 
         Matrix.setIdentityM(mvpMatrix, 0)
         GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false, mvpMatrix, 0)
         GLES20.glUniformMatrix4fv(surfaceMatrixHandle, 1, false, surfaceMatrix, 0)
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
-        checkGlError("glDrawArrays")
+        if(!checkGlError("glDrawArrays")){
+            prepareMedia?.error()
+        }
         GLES20.glFinish()
     }
 
