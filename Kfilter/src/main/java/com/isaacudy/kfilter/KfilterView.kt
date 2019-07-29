@@ -528,13 +528,19 @@ class KfilterView @JvmOverloads constructor(context: Context,
         }
 
         override fun onRender() {
-            mediaRenderer?.setFrameTime(0)
-            surface?.apply {
-                val canvas = lockCanvas(null)
-                canvas.drawARGB(255, 0, 0, 0)
-                canvas.drawBitmap(bitmap, 0f, 0f, null)
-                unlockCanvasAndPost(canvas)
-                prepareMedia?.readyMedia()
+            try {
+                mediaRenderer?.setFrameTime(0)
+                surface?.apply {
+                    val canvas = lockCanvas(null)
+                    canvas.drawARGB(255, 0, 0, 0)
+                    canvas.drawBitmap(bitmap, 0f, 0f, null)
+                    unlockCanvasAndPost(canvas)
+                    prepareMedia?.readyMedia()
+                    Log.d("isReady", "readyMedia")
+                }
+            }catch (e: Exception){
+                Log.d("isReady", "error")
+                prepareMedia?.error()
             }
         }
 
