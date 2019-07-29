@@ -105,25 +105,37 @@ internal class KfilterRenderer(val kfilter: Kfilter) {
         }
 
         positionHandle = GLES20.glGetAttribLocation(program, "aPosition")
-        checkGlError("glGetAttribLocation aPosition")
+        if(!checkGlError("glGetAttribLocation aPosition")){
+            prepareMedia?.error()
+            return
+        }
         if (positionHandle == -1) {
             throw RuntimeException("Could not get attrib location for aPosition")
         }
 
         textureHandle = GLES20.glGetAttribLocation(program, "aTextureCoord")
-        checkGlError("glGetAttribLocation aTextureCoord")
+        if(!checkGlError("glGetAttribLocation aTextureCoord")){
+            prepareMedia?.error()
+            return
+        }
         if (textureHandle == -1) {
             throw RuntimeException("Could not get attrib location for aTextureCoord")
         }
 
         mvpMatrixHandle = GLES20.glGetUniformLocation(program, "mvpMatrix")
-        checkGlError("glGetUniformLocation mvpMatrix")
+        if(!checkGlError("glGetUniformLocation mvpMatrix")){
+            prepareMedia?.error()
+            return
+        }
         if (mvpMatrixHandle == -1) {
             throw RuntimeException("Could not get attrib location for mvpMatrix")
         }
 
         surfaceMatrixHandle = GLES20.glGetUniformLocation(program, "surfaceMatrix")
-        checkGlError("glGetUniformLocation surfaceMatrix")
+        if(!checkGlError("glGetUniformLocation surfaceMatrix")){
+            prepareMedia?.error()
+            return
+        }
         if (surfaceMatrixHandle == -1) {
             throw RuntimeException("Could not get attrib location for surfaceMatrix")
         }
@@ -137,7 +149,10 @@ internal class KfilterRenderer(val kfilter: Kfilter) {
     fun draw(milliseconds: Long, st: SurfaceTexture, scissorAmount: Float = 1f, offset: Boolean = false) {
         if (!initialised) initialise()
 
-        checkGlError("onDrawFrame start")
+        if(!checkGlError("onDrawFrame start")){
+            prepareMedia?.error()
+            return
+        }
         st.getTransformMatrix(surfaceMatrix)
 
         GLES20.glEnable(GLES20.GL_SCISSOR_TEST)
@@ -165,19 +180,21 @@ internal class KfilterRenderer(val kfilter: Kfilter) {
 
         GLES20.glEnableVertexAttribArray(positionHandle)
         if(!checkGlError("glEnableVertexAttribArray positionHandle")){
-            return
             prepareMedia?.error()
+            return
         }
 
         triangleVertices.position(TRIANGLE_VERTICES_DATA_UV_OFFSET)
         GLES20.glVertexAttribPointer(textureHandle, 2, GLES20.GL_FLOAT, false, TRIANGLE_VERTICES_DATA_STRIDE_BYTES, triangleVertices)
         if(!checkGlError("glVertexAttribPointer textureHandle")){
             prepareMedia?.error()
+            return
         }
 
         GLES20.glEnableVertexAttribArray(textureHandle)
         if(!checkGlError("glEnableVertexAttribArray textureHandle")){
             prepareMedia?.error()
+            return
         }
 
         Matrix.setIdentityM(mvpMatrix, 0)
@@ -186,6 +203,7 @@ internal class KfilterRenderer(val kfilter: Kfilter) {
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
         if(!checkGlError("glDrawArrays")){
             prepareMedia?.error()
+            return
         }
         GLES20.glFinish()
     }
