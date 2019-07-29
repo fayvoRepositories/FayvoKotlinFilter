@@ -150,6 +150,7 @@ internal class KfilterRenderer(val kfilter: Kfilter) {
         GLES20.glUseProgram(program)
         if (!checkGlError("glUseProgram")){
             prepareMedia?.error()
+            return
         }
 
         kfilter.apply(milliseconds)
@@ -158,11 +159,13 @@ internal class KfilterRenderer(val kfilter: Kfilter) {
         triangleVertices.position(TRIANGLE_VERTICES_DATA_POS_OFFSET)
         GLES20.glVertexAttribPointer(positionHandle, 3, GLES20.GL_FLOAT, false, TRIANGLE_VERTICES_DATA_STRIDE_BYTES, triangleVertices)
         if(!checkGlError("glVertexAttribPointer maPosition")){
+            return
             prepareMedia?.error()
         }
 
         GLES20.glEnableVertexAttribArray(positionHandle)
         if(!checkGlError("glEnableVertexAttribArray positionHandle")){
+            return
             prepareMedia?.error()
         }
 
