@@ -58,6 +58,7 @@ internal abstract class TextureSurfaceRenderer(private val texture: SurfaceTextu
     override fun run() {
         initGL()
         initGLComponents()
+
         Log.d(LOG_TAG, "OpenGL init OK.")
         while (running) {
             val loopStart = System.currentTimeMillis()

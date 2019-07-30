@@ -130,6 +130,7 @@ internal class KfilterMediaRenderer(texture: SurfaceTexture, private var mediaWi
 
     override fun initGLComponents() {
         if (mediaTexture != null) return
+        if(externalTexture == null) return
         mediaTexture = SurfaceTexture(externalTexture.id).apply {
             setOnFrameAvailableListener(this@KfilterMediaRenderer)
         }

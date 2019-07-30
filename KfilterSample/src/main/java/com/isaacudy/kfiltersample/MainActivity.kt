@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity(), KfilterProcessor.SaveFile, KfilterView
     }
 
     override fun error() {
+        kfilterView.releaseRenderingResources()
         kfilterView.setContentPath(path)
         Log.d("PrepareMedia", "false")
     }
