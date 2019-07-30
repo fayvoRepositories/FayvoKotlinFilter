@@ -20,6 +20,7 @@ package com.isaacudy.kfilter.rendering
 
 import android.graphics.SurfaceTexture
 import android.opengl.GLES20
+import android.opengl.GLES20.GL_FRAMEBUFFER
 import android.opengl.Matrix
 import android.util.Log
 
@@ -136,6 +137,7 @@ internal class KfilterRenderer(val kfilter: Kfilter) {
             prepareMedia?.error()
             return
         }
+        GLES20.glBindFramebuffer(GL_FRAMEBUFFER, 0)
         if (surfaceMatrixHandle == -1) {
             throw RuntimeException("Could not get attrib location for surfaceMatrix")
         }
@@ -155,6 +157,7 @@ internal class KfilterRenderer(val kfilter: Kfilter) {
             return
         }*/
         st.getTransformMatrix(surfaceMatrix)
+
 
         GLES20.glEnable(GLES20.GL_SCISSOR_TEST)
         var leftOffset = 0
