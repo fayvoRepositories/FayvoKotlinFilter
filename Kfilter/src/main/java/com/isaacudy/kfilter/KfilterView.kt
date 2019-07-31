@@ -352,7 +352,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
 
     public fun prepareRenderingResources() {
         val texture = texture ?: return
-
+        externalTexture.prepareMedia = prepareMedia
         mediaRenderer = KfilterMediaRenderer(texture, surfaceWidth, surfaceHeight, externalTexture).apply {
             setMediaSize(contentFile?.mediaWidth ?: -1, contentFile?.mediaHeight ?: -1)
             setKfilter(kfilters[selectedKfilter])
