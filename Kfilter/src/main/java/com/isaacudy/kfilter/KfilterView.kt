@@ -34,7 +34,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
                                             defStyleRes: Int = 0)
     : TextureView(context, attrs, defStyleAttr, defStyleRes), TextureView.SurfaceTextureListener {
 
-    var isChange : Boolean = false
+    var isChange: Boolean = false
     var onPreparedListener: (mediaPlayer: MediaPlayer) -> Unit = {}
         set(value) {
             field = value
@@ -223,7 +223,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
     }
 
 
-    fun touchEventUp(event: MotionEvent) : Boolean {
+    fun touchEventUp(event: MotionEvent): Boolean {
         /*if (event.action == MotionEvent.ACTION_DOWN) {
             isChange = true
             offsetAnimator?.apply { cancel() }
@@ -526,7 +526,12 @@ class KfilterView @JvmOverloads constructor(context: Context,
         lateinit var bitmap: Bitmap
 
         init {
-            contentFile?.let { bitmap = loadBitmap(it) }
+            contentFile?.let {
+                bitmap = loadBitmap(it)
+                if (bitmap.width == 0) {
+                    bitmap = loadBitmap(it)
+                }
+            }
         }
 
         override fun onRender() {
@@ -540,7 +545,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
                     prepareMedia?.readyMedia()
                     Log.d("isReady", "readyMedia")
                 }
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 Log.d("isReady", "error")
                 prepareMedia?.error()
             }
@@ -566,9 +571,9 @@ class KfilterView @JvmOverloads constructor(context: Context,
 
     fun test(isLeft: Boolean, x1: Float, x2: Float) {
 //        Log.d("tabi_isLeft" , isLeft.toString())
-        Log.d("tabi_isLeft" , "(x1 - x2) " + (x1 - x2) + " (x1 - x2) <= -100  = "+ ((x1 - x2) <= -100).toString() +" isChange "+ isChange +" condition "+ (isLeft && (x1 - x2) <= -100 && isChange) )
+        Log.d("tabi_isLeft", "(x1 - x2) " + (x1 - x2) + " (x1 - x2) <= -100  = " + ((x1 - x2) <= -100).toString() + " isChange " + isChange + " condition " + (isLeft && (x1 - x2) <= -100 && isChange))
 //        Log.d("tabi_isLeft" , "(x1 - x2) " + (x1 - x2) + " (x1 - x2) <= 100  = "+ ((x1 - x2) >= 100).toString()+" isChange "+ isChange)
-        if(isChange) {
+        if (isChange) {
             if ((x1 - x2) <= -80) {
                 Log.d("tab_direction ", "left to right")
                 if (selectedKfilterStart == 0 || selectedKfilterStart == kfilters.size - 1) {
@@ -587,6 +592,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
 
 //        selectedKfilterStart = selectedKfilter
     }
+
     private inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
 
         override fun onDown(e: MotionEvent?): Boolean {
@@ -642,9 +648,9 @@ class KfilterView @JvmOverloads constructor(context: Context,
 
         override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
             val distance = (e1.x - e2.x) / surfaceWidth
-            if(e1.x > e2.x){
+            if (e1.x > e2.x) {
                 test(true, e1.x, e2.x)
-            }else{
+            } else {
                 test(false, e1.x, e2.x)
             }
 
@@ -654,7 +660,6 @@ class KfilterView @JvmOverloads constructor(context: Context,
             return true
         }
     }
-
 
 
     fun onDown(): Boolean {
@@ -706,9 +711,9 @@ class KfilterView @JvmOverloads constructor(context: Context,
 
     fun onScroll(e1: MotionEvent, e2: MotionEvent): Boolean {
         val distance = (e1.x - e2.x) / surfaceWidth
-        if(e1.x > e2.x){
+        if (e1.x > e2.x) {
             test(true, e1.x, e2.x)
-        }else{
+        } else {
             test(false, e1.x, e2.x)
         }
 
