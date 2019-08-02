@@ -102,6 +102,7 @@ internal class KfilterRenderer(val kfilter: Kfilter) {
 
         program = createProgram(VERTEX_SHADER, kfilter.getShader())
         if (program == 0) {
+            Log.d("initialise", "failed creating program")
 //            throw RuntimeException("failed creating program")
         }
 
@@ -120,7 +121,10 @@ internal class KfilterRenderer(val kfilter: Kfilter) {
             return
         }
         if (textureHandle == -1) {
-            throw RuntimeException("Could not get attrib location for aTextureCoord")
+            Log.d("initialise", "Could not get attrib location for aTextureCoord")
+            prepareMedia?.error()
+            return
+//            throw RuntimeException("Could not get attrib location for aTextureCoord")
         }
 
         mvpMatrixHandle = GLES20.glGetUniformLocation(program, "mvpMatrix")
@@ -129,7 +133,10 @@ internal class KfilterRenderer(val kfilter: Kfilter) {
             return
         }
         if (mvpMatrixHandle == -1) {
-            throw RuntimeException("Could not get attrib location for mvpMatrix")
+            Log.d("initialise", "Could not get attrib location for mvpMatrix")
+            prepareMedia?.error()
+            return
+//            throw RuntimeException("Could not get attrib location for mvpMatrix")
         }
 
         surfaceMatrixHandle = GLES20.glGetUniformLocation(program, "surfaceMatrix")
@@ -139,7 +146,10 @@ internal class KfilterRenderer(val kfilter: Kfilter) {
         }
         GLES20.glBindFramebuffer(GL_FRAMEBUFFER, 0)
         if (surfaceMatrixHandle == -1) {
-            throw RuntimeException("Could not get attrib location for surfaceMatrix")
+            Log.d("initialise", "Could not get attrib location for surfaceMatrix")
+            prepareMedia?.error()
+            return
+//            throw RuntimeException("Could not get attrib location for surfaceMatrix")
         }
 
         kfilter.resize(inputWidth, inputHeight, targetWidth, targetHeight)
@@ -178,8 +188,8 @@ internal class KfilterRenderer(val kfilter: Kfilter) {
         triangleVertices.position(TRIANGLE_VERTICES_DATA_POS_OFFSET)
         GLES20.glVertexAttribPointer(positionHandle, 3, GLES20.GL_FLOAT, false, TRIANGLE_VERTICES_DATA_STRIDE_BYTES, triangleVertices)
         if(!checkGlError("glVertexAttribPointer maPosition")){
-            return
             prepareMedia?.error()
+            return
         }
 
         GLES20.glEnableVertexAttribArray(positionHandle)
