@@ -5,6 +5,10 @@ import android.graphics.Bitmap
 import android.graphics.Matrix
 import com.isaacudy.kfilter.KfilterMediaFile
 import com.isaacudy.kfilter.MediaType
+import java.io.ByteArrayOutputStream
+
+
+
 
 internal fun loadBitmap(mediaFile: KfilterMediaFile): Bitmap {
     if (mediaFile.mediaType != MediaType.IMAGE) {
@@ -26,6 +30,10 @@ internal fun loadBitmap(mediaFile: KfilterMediaFile): Bitmap {
         val matrix = Matrix()
         matrix.postRotate(mediaFile.orientation.toFloat())
         bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+        val bos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bos)
+        val bitmapdata = bos.toByteArray()
+        bitmap = BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.size)
     }
 
     return bitmap
