@@ -58,6 +58,7 @@ internal abstract class TextureSurfaceRenderer(private val texture: SurfaceTextu
     override fun run() {
         initGL()
         initGLComponents()
+
         Log.d(LOG_TAG, "OpenGL init OK.")
         while (running) {
             val loopStart = System.currentTimeMillis()
@@ -113,9 +114,11 @@ internal abstract class TextureSurfaceRenderer(private val texture: SurfaceTextu
         val surfaceAttribs = intArrayOf(EGL14.EGL_NONE)
         eglSurface = EGL14.eglCreateWindowSurface(eglDisplay, eglConfig, texture, surfaceAttribs, 0)
         if (eglSurface == null || eglSurface == EGL14.EGL_NO_SURFACE) {
+            Log.d("initGL_error", "GL Error: " + GLUtils.getEGLErrorString(EGL14.eglGetError()))
 //            throw RuntimeException("GL Error: " + GLUtils.getEGLErrorString(EGL14.eglGetError()))
         }
         if (!EGL14.eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext)) {
+            Log.d("initGL_error", "GL Make current error: " + GLUtils.getEGLErrorString(EGL14.eglGetError()))
 //            throw RuntimeException("GL Make current error: " + GLUtils.getEGLErrorString(EGL14.eglGetError()))
         }
     }
@@ -139,6 +142,7 @@ internal abstract class TextureSurfaceRenderer(private val texture: SurfaceTextu
         val attributes = config
         val configChosen = EGL14.eglChooseConfig(eglDisplay, attributes, 0, configs, 0, configs.size, configsCount, 0)
         if (!configChosen) {
+            Log.d("initGL_error", " chooseEglConfig Failed to choose config: " + GLUtils.getEGLErrorString(EGL14.eglGetError()))
             throw IllegalArgumentException("Failed to choose config: " + GLUtils.getEGLErrorString(EGL14.eglGetError()))
         }
         else if (configsCount[0] > 0) {

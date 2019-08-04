@@ -4,6 +4,7 @@ import android.opengl.EGL14
 import android.opengl.GLES11Ext
 import android.opengl.GLES20
 import android.util.Log
+import com.isaacudy.kfilter.KfilterView
 import java.lang.IllegalStateException
 import java.nio.IntBuffer
 
@@ -12,6 +13,8 @@ open class ExternalTexture {
     var id: Int = -1
         get
         private set
+    var prepareMedia: KfilterView.PrepareMedia? = null
+        set
 
     fun initialise(){
         val textures = IntArray(1)
@@ -25,17 +28,23 @@ open class ExternalTexture {
         if(id == -1) initialise()
 
         val externalTextureHandle = GLES20.glGetUniformLocation(shaderProgram, "externalTexture")
-        checkGlError("glGetUniformLocation externalTexture")
+        if(!checkGlError("glGetUniformLocation externalTexture")){
+            prepareMedia?.error()
+        }
         if (externalTextureHandle == -1) {
             throw IllegalStateException("Failed to get texture handle for externalTexture")
         }
         GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, id)
-        checkGlError("glBindTexture id")
+       if(!checkGlError("glBindTexture id")){
+           prepareMedia?.error()
+       }
         GLES20.glTexParameterf(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST.toFloat())
         GLES20.glTexParameterf(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR.toFloat())
         GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE)
         GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE)
-        checkGlError("glTexParameter")
+        if(!checkGlError("glTexParameter")){
+            prepareMedia?.error()
+        }
     }
 
     fun release(){
@@ -44,14 +53,17 @@ open class ExternalTexture {
     }
 }
 
+
 val TAG = "KGLU"
 
-fun checkGlError(op: String) {
+fun checkGlError(op: String) :Boolean{
     val error = GLES20.glGetError()
     if (error != GLES20.GL_NO_ERROR) {
         Log.e(TAG, op + ": glError " + error)
 //        throw RuntimeException(op + ": glError " + error)
+        return false
     }
+    return true
 }
 
 fun checkEglError(msg: String) {

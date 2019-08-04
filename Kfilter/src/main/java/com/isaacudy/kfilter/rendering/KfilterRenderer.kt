@@ -20,10 +20,12 @@ package com.isaacudy.kfilter.rendering
 
 import android.graphics.SurfaceTexture
 import android.opengl.GLES20
+import android.opengl.GLES20.GL_FRAMEBUFFER
 import android.opengl.Matrix
 import android.util.Log
 
 import com.isaacudy.kfilter.Kfilter
+import com.isaacudy.kfilter.KfilterView
 import com.isaacudy.kfilter.utils.*
 import java.nio.Buffer
 
@@ -82,6 +84,7 @@ internal class KfilterRenderer(val kfilter: Kfilter) {
 
     private var targetWidth: Int = kfilter.inputWidth
     private var targetHeight: Int = kfilter.inputHeight
+    public var prepareMedia: KfilterView.PrepareMedia? = null
 
     var initialised: Boolean = false
         private set
@@ -99,31 +102,54 @@ internal class KfilterRenderer(val kfilter: Kfilter) {
 
         program = createProgram(VERTEX_SHADER, kfilter.getShader())
         if (program == 0) {
+            Log.d("initialise", "failed creating program")
 //            throw RuntimeException("failed creating program")
         }
 
         positionHandle = GLES20.glGetAttribLocation(program, "aPosition")
-        checkGlError("glGetAttribLocation aPosition")
+        if(!checkGlError("glGetAttribLocation aPosition")){
+            prepareMedia?.error()
+            return
+        }
         if (positionHandle == -1) {
             throw RuntimeException("Could not get attrib location for aPosition")
         }
 
         textureHandle = GLES20.glGetAttribLocation(program, "aTextureCoord")
-        checkGlError("glGetAttribLocation aTextureCoord")
+        if(!checkGlError("glGetAttribLocation aTextureCoord")){
+            prepareMedia?.error()
+            return
+        }
         if (textureHandle == -1) {
-            throw RuntimeException("Could not get attrib location for aTextureCoord")
+            Log.d("initialise", "Could not get attrib location for aTextureCoord")
+            prepareMedia?.error()
+            return
+//            throw RuntimeException("Could not get attrib location for aTextureCoord")
         }
 
         mvpMatrixHandle = GLES20.glGetUniformLocation(program, "mvpMatrix")
-        checkGlError("glGetUniformLocation mvpMatrix")
+        if(!checkGlError("glGetUniformLocation mvpMatrix")){
+            prepareMedia?.error()
+            return
+        }
         if (mvpMatrixHandle == -1) {
-            throw RuntimeException("Could not get attrib location for mvpMatrix")
+            Log.d("initialise", "Could not get attrib location for mvpMatrix")
+            prepareMedia?.error()
+            return
+//            throw RuntimeException("Could not get attrib location for mvpMatrix")
         }
 
         surfaceMatrixHandle = GLES20.glGetUniformLocation(program, "surfaceMatrix")
-        checkGlError("glGetUniformLocation surfaceMatrix")
+        if(!checkGlError("glGetUniformLocation surfaceMatrix")){
+            prepareMedia?.error()
+            return
+        }
+        GLES20.glBindFramebuffer(GL_FRAMEBUFFER, 0)
         if (surfaceMatrixHandle == -1) {
-            throw RuntimeException("Could not get attrib location for surfaceMatrix")
+            Log.d("initialise", "Could not get attrib location for surfaceMatrix")
+            prepareMedia?.error()
+            return
+//            throw RuntimeException("Could not get attrib location for surfaceMatrix")
         }
 
         kfilter.resize(inputWidth, inputHeight, targetWidth, targetHeight)
@@ -136,7 +162,12 @@ internal class KfilterRenderer(val kfilter: Kfilter) {
         if (!initialised) initialise()
 
         checkGlError("onDrawFrame start")
+        /*if(!checkGlError("onDrawFrame start")){
+            prepareMedia?.error()
+            return
+        }*/
         st.getTransformMatrix(surfaceMatrix)
+
 
         GLES20.glEnable(GLES20.GL_SCISSOR_TEST)
         var leftOffset = 0
@@ -146,30 +177,48 @@ internal class KfilterRenderer(val kfilter: Kfilter) {
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
         GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT or GLES20.GL_COLOR_BUFFER_BIT)
         GLES20.glUseProgram(program)
-        checkGlError("glUseProgram")
+        if (!checkGlError("glUseProgram")){
+            prepareMedia?.error()
+            return
+        }
 
         kfilter.apply(milliseconds)
         GLES20.glGetError() // It appears "apply" can sometimes cause erroneous errors
 
         triangleVertices.position(TRIANGLE_VERTICES_DATA_POS_OFFSET)
         GLES20.glVertexAttribPointer(positionHandle, 3, GLES20.GL_FLOAT, false, TRIANGLE_VERTICES_DATA_STRIDE_BYTES, triangleVertices)
-        checkGlError("glVertexAttribPointer maPosition")
+        if(!checkGlError("glVertexAttribPointer maPosition")){
+            prepareMedia?.error()
+            return
+        }
 
         GLES20.glEnableVertexAttribArray(positionHandle)
-        checkGlError("glEnableVertexAttribArray positionHandle")
+        if(!checkGlError("glEnableVertexAttribArray positionHandle")){
+            prepareMedia?.error()
+            return
+        }
 
         triangleVertices.position(TRIANGLE_VERTICES_DATA_UV_OFFSET)
         GLES20.glVertexAttribPointer(textureHandle, 2, GLES20.GL_FLOAT, false, TRIANGLE_VERTICES_DATA_STRIDE_BYTES, triangleVertices)
-        checkGlError("glVertexAttribPointer textureHandle")
+        if(!checkGlError("glVertexAttribPointer textureHandle")){
+            prepareMedia?.error()
+            return
+        }
 
         GLES20.glEnableVertexAttribArray(textureHandle)
-        checkGlError("glEnableVertexAttribArray textureHandle")
+        if(!checkGlError("glEnableVertexAttribArray textureHandle")){
+            prepareMedia?.error()
+            return
+        }
 
         Matrix.setIdentityM(mvpMatrix, 0)
         GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false, mvpMatrix, 0)
         GLES20.glUniformMatrix4fv(surfaceMatrixHandle, 1, false, surfaceMatrix, 0)
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
-        checkGlError("glDrawArrays")
+        if(!checkGlError("glDrawArrays")){
+            prepareMedia?.error()
+            return
+        }
         GLES20.glFinish()
     }
 

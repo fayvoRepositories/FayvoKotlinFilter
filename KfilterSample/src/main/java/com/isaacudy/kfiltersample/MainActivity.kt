@@ -30,11 +30,15 @@ import java.io.File
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity(), KfilterProcessor.SaveFile, KfilterView.PrepareMedia {
+
+    lateinit var path : String
     override fun readyMedia() {
         Log.d("PrepareMedia", "true")
     }
 
     override fun error() {
+        kfilterView.releaseRenderingResources()
+        kfilterView.setContentPath(path)
         Log.d("PrepareMedia", "false")
     }
 
@@ -50,6 +54,7 @@ class MainActivity : AppCompatActivity(), KfilterProcessor.SaveFile, KfilterView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("LifeCycle", "onCreate")
 
         if (false) {
             setContentView(getTestView(this))
@@ -98,10 +103,22 @@ class MainActivity : AppCompatActivity(), KfilterProcessor.SaveFile, KfilterView
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.d("LifeCycle", "onResume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("LifeCycle", "onPause")
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        Log.d("LifeCycle", "onActivityResult")
         if (resultCode != Activity.RESULT_OK) return
         if (requestCode == ACTIVITY_CHOOSE_FILE) {
             getUriPath(this, data.data)?.let {
+                path = it
                 kfilterView.setContentPath(it)
             }
         }

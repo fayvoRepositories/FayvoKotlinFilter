@@ -27,7 +27,7 @@ internal class KfilterMediaFile(val path: String) {
 
     init {
         val extension = path.split(".").last()
-        val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.toLowerCase())
 
         when {
             mimeType.startsWith("video") -> processAsVideo()

@@ -14,6 +14,7 @@ import android.util.Log
 
 import com.isaacudy.kfilter.utils.ExternalTexture
 import com.isaacudy.kfilter.Kfilter
+import com.isaacudy.kfilter.KfilterView
 
 internal class KfilterMediaRenderer(texture: SurfaceTexture, private var mediaWidth: Int, private var mediaHeight: Int, private val externalTexture: ExternalTexture)
     : TextureSurfaceRenderer(texture, mediaWidth, mediaHeight), SurfaceTexture.OnFrameAvailableListener {
@@ -29,6 +30,7 @@ internal class KfilterMediaRenderer(texture: SurfaceTexture, private var mediaWi
     private var queuedPrimaryKfilter: KfilterRenderer? = null
     private var secondaryKfilter: KfilterRenderer? = null
     private var queuedSecondaryKfilter: KfilterRenderer? = null
+    var prepareMedia: KfilterView.PrepareMedia? = null
 
     var filterOffset: Float = 0f
         set(value) {
@@ -82,11 +84,13 @@ internal class KfilterMediaRenderer(texture: SurfaceTexture, private var mediaWi
 
         synchronized(this) {
             if (filterOffset == 0f || secondaryKfilter == null) {
+                kfilter?.prepareMedia = this.prepareMedia!!
                 kfilter?.draw(frameTime, surfaceTexture)
             }
             else {
                 val slidingLeft = filterOffset < 0
                 val currentOffset = filterOffset
+                kfilter?.prepareMedia = this.prepareMedia!!
                 kfilter?.draw(frameTime, surfaceTexture, 1 - Math.abs(currentOffset), !slidingLeft)
                 secondaryKfilter?.draw(frameTime, surfaceTexture, Math.abs(currentOffset) * 1.005f, slidingLeft)
             }
@@ -126,6 +130,7 @@ internal class KfilterMediaRenderer(texture: SurfaceTexture, private var mediaWi
 
     override fun initGLComponents() {
         if (mediaTexture != null) return
+        if(externalTexture == null) return
         mediaTexture = SurfaceTexture(externalTexture.id).apply {
             setOnFrameAvailableListener(this@KfilterMediaRenderer)
         }
