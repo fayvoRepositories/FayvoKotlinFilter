@@ -43,7 +43,7 @@ internal fun getBitmapDownscaling(w: Int, h: Int): Int {
     var width = w
     var height = h
     var scaling = 1
-    while (width > 3096 || height > 3096) {
+    while (width > 2096 || height > 2096) {
         scaling *= 2
         width = w / scaling
         height = h / scaling
