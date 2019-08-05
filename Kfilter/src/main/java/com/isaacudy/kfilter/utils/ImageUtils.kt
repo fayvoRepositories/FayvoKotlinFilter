@@ -31,22 +31,22 @@ internal fun loadBitmap(mediaFile: KfilterMediaFile): Bitmap {
         matrix.postRotate(mediaFile.orientation.toFloat())
         bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
         val bos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bos)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 60, bos)
         val bitmapdata = bos.toByteArray()
         bitmap = BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.size)
     }
 
-    return bitmap
+            return bitmap
 }
 
 internal fun getBitmapDownscaling(w: Int, h: Int): Int {
     var width = w
     var height = h
-    var scaling = 1
-    while (width > 2096 || height > 2096) {
+    var scaling = 2
+    /*while (width > 2096 || height > 2096) {
         scaling *= 2
         width = w / scaling
         height = h / scaling
-    }
+    }*/
     return scaling
 }
