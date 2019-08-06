@@ -168,9 +168,8 @@ internal class OutputSurface(kfilter: Kfilter, initEgl: Boolean = false, private
                 eglMakeCurrent(eglDisplay, EGL10.EGL_NO_SURFACE, EGL10.EGL_NO_SURFACE,
                         EGL10.EGL_NO_CONTEXT)
             }
-            eglDestroySurface(eglDisplay, eglSurface)
             eglDestroyContext(eglDisplay, eglContext)
-
+            eglDestroySurface(eglDisplay, eglSurface)
             eglReleaseThread()
             eglTerminate(eglDisplay)
         }
