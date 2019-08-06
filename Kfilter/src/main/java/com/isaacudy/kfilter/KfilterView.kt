@@ -74,7 +74,6 @@ class KfilterView @JvmOverloads constructor(context: Context,
     private var offsetAnimator: ValueAnimator? = null
     private var kfilterOffset = 0f
         set(value) {
-            Log.d("tabi_kfilterOffset", "kfilterOffset = " + kfilterOffset + " kSelectFilter = " + selectedKfilter)
             field = value
             if (field > kfilters.size - 1) field = kfilters.size - 1f
             if (field < 0) field = 0f
@@ -155,7 +154,6 @@ class KfilterView @JvmOverloads constructor(context: Context,
     }
 
     private fun applyKfilterOffset() {
-        Log.d("tabi_applyKfilterOffset ", "filterOffset = " + kfilterOffset.toString())
         var primary = selectedKfilter
         var secondary = Math.floor(kfilterOffset.toDouble()).toInt()
         if (primary == secondary) {
@@ -164,9 +162,6 @@ class KfilterView @JvmOverloads constructor(context: Context,
 
         if (primary < 0) primary = 0
         if (secondary < 0) secondary = 0
-
-        Log.d("tabi_applyKfilterOffset ", "primary = " + primary.toString() +
-                ",  " + "secondary = " + secondary.toString())
         mediaRenderer?.apply {
             var primaryKfilter: Kfilter = BaseKfilter()
             if (kfilters.size > primary) {
@@ -180,8 +175,6 @@ class KfilterView @JvmOverloads constructor(context: Context,
 
             setKfilter(primaryKfilter, secondaryKfilter)
             filterOffset = (selectedKfilter - kfilterOffset)
-            Log.d("tabi_applyKfilterOffset ", "primary = " + primary.toString() +
-                    ",  " + "secondary = " + secondary.toString())
         }
     }
 
@@ -206,7 +199,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
 
         if (event?.action == MotionEvent.ACTION_UP) {
             isChange = false
-            Log.d("tabi_onTouch", "event up")
+//            Log.d("tabi_onTouch", "event up")
             offsetAnimator?.apply { cancel() }
             offsetAnimator = null
 
@@ -234,7 +227,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
 
         if (event?.action == MotionEvent.ACTION_UP) {
             isChange = false
-            Log.d("tabi_onTouch", "event up")
+//            Log.d("tabi_onTouch", "event up")
             offsetAnimator?.apply { cancel() }
             offsetAnimator = null
 
@@ -503,10 +496,8 @@ class KfilterView @JvmOverloads constructor(context: Context,
                     canvas.drawBitmap(bitmap, 0f, 0f, null)
                     unlockCanvasAndPost(canvas)
                     prepareMedia?.readyMedia()
-                    Log.d("isReady", "readyMedia")
                 }
             } catch (e: Exception) {
-                Log.d("isReady", "error")
                 prepareMedia?.error()
             }
         }
@@ -530,18 +521,15 @@ class KfilterView @JvmOverloads constructor(context: Context,
     }
 
     fun test(isLeft: Boolean, x1: Float, x2: Float) {
-//        Log.d("tabi_isLeft" , isLeft.toString())
-        Log.d("tabi_isLeft", "(x1 - x2) " + (x1 - x2) + " (x1 - x2) <= -100  = " + ((x1 - x2) <= -100).toString() + " isChange " + isChange + " condition " + (isLeft && (x1 - x2) <= -100 && isChange))
-//        Log.d("tabi_isLeft" , "(x1 - x2) " + (x1 - x2) + " (x1 - x2) <= 100  = "+ ((x1 - x2) >= 100).toString()+" isChange "+ isChange)
         if (isChange) {
             if ((x1 - x2) <= -80) {
-                Log.d("tab_direction ", "left to right")
+//                Log.d("tab_direction ", "left to right")
                 if (selectedKfilterStart == 0 || selectedKfilterStart == kfilters.size - 1) {
                     selectedKfilterStart = kfilters.size - 1
                     isChange = false
                 }
             } else if (isLeft && (x1 - x2) >= 80) {
-                Log.d("tabi_direction ", "right to left")
+//                Log.d("tabi_direction ", "right to left")
                 if (selectedKfilterStart == 0 || selectedKfilterStart == kfilters.size - 1) {
                     selectedKfilterStart = 0
 
@@ -550,7 +538,6 @@ class KfilterView @JvmOverloads constructor(context: Context,
             }
         }
 
-//        selectedKfilterStart = selectedKfilter
     }
 
     private inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
@@ -577,8 +564,6 @@ class KfilterView @JvmOverloads constructor(context: Context,
         }
 
         override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
-            Log.d("tabi_onFling", "velocityX = " + velocityX)
-
             val yDistance: Float = Math.abs(e1.getY() - e2.getY())
 
             val velocityY1 = Math.abs(velocityY)
@@ -600,8 +585,6 @@ class KfilterView @JvmOverloads constructor(context: Context,
                     kfilterOffset = it.animatedValue as Float
                 }
                 offsetAnimator?.start()
-                Log.d("tabi_onFling = ", "selectedKfilter = " + selectedKfilter.toString()
-                        + " " + "kfilterOffset = " + kfilterOffset.toString())
             }
             return true
         }
@@ -615,8 +598,6 @@ class KfilterView @JvmOverloads constructor(context: Context,
             }
 
             kfilterOffset = selectedKfilterStart + distance
-            Log.d("Position = ", selectedKfilter.toString())
-            Log.d("kfilterOffset = ", kfilterOffset.toString())
             return true
         }
     }
@@ -635,7 +616,6 @@ class KfilterView @JvmOverloads constructor(context: Context,
 
 
     fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
-        Log.d("tabi_onFling", "velocityX = " + velocityX)
 
         val yDistance: Float = Math.abs(e1.getY() - e2.getY())
 
@@ -658,8 +638,6 @@ class KfilterView @JvmOverloads constructor(context: Context,
                 kfilterOffset = it.animatedValue as Float
             }
             offsetAnimator?.start()
-            Log.d("tabi_onFling = ", "selectedKfilter = " + selectedKfilter.toString()
-                    + " " + "kfilterOffset = " + kfilterOffset.toString())
         }
         return true
     }
@@ -673,8 +651,6 @@ class KfilterView @JvmOverloads constructor(context: Context,
         }
 
         kfilterOffset = selectedKfilterStart + distance
-        Log.d("Position = ", selectedKfilter.toString())
-        Log.d("kfilterOffset = ", kfilterOffset.toString())
         return true
     }
 
