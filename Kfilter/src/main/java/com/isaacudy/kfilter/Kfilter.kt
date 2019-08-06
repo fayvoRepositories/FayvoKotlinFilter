@@ -1,6 +1,7 @@
 package com.isaacudy.kfilter
 
 import android.opengl.GLES20
+import android.util.Log
 import com.isaacudy.kfilter.filters.metadata.Metadata
 import com.isaacudy.kfilter.filters.metadata.MetadataProvider
 import com.isaacudy.kfilter.utils.ExternalTexture
@@ -43,6 +44,7 @@ abstract class Kfilter {
     private val metadataProvider = MetadataProvider(
         mapOf(
             "kfilterTime" to { long: Long ->
+                Log.d("kfilterTime" , long.toInt().toString())
                 Metadata.Uniform1i(long.toInt())
             }
         )
@@ -112,7 +114,7 @@ abstract class Kfilter {
     fun initialise(shaderProgram: Int) {
         if (shaderProgram != activeShaderProgram) release()
         if (initialised) return
-        metadataProvider.initialiseMetadata(shaderProgram)
+//        metadataProvider.initialiseMetadata(shaderProgram)
         onInitialise(shaderProgram)
         released = false
         initialised = true
@@ -140,7 +142,7 @@ abstract class Kfilter {
         if (!initialised) {
             return
         }
-        metadataProvider.applyMetadata(milliseconds)
+//        metadataProvider.applyMetadata(milliseconds)
         onApply()
     }
 
