@@ -20,6 +20,7 @@ package com.isaacudy.kfilter.rendering
 
 import android.graphics.SurfaceTexture
 import android.opengl.EGL14
+import android.opengl.EGL14.eglReleaseThread
 import android.util.Log
 import android.view.Surface
 
@@ -169,8 +170,14 @@ internal class OutputSurface(kfilter: Kfilter, initEgl: Boolean = false, private
             }
             eglDestroySurface(eglDisplay, eglSurface)
             eglDestroyContext(eglDisplay, eglContext)
+
+            eglReleaseThread()
+            eglTerminate(eglDisplay)
         }
-//        surface?.release()
+
+
+
+        surface?.release()
         // this causes a bunch of warnings that appear harmless but might confuse someone:
         //  W BufferQueue: [unnamed-3997-2] cancelBuffer: BufferQueue has been abandoned!
         //surfaceTexture.release();
