@@ -174,12 +174,11 @@ internal class OutputSurface(kfilter: Kfilter, initEgl: Boolean = false, private
             eglTerminate(eglDisplay)
         }
 
-
-
         surface?.release()
         // this causes a bunch of warnings that appear harmless but might confuse someone:
         //  W BufferQueue: [unnamed-3997-2] cancelBuffer: BufferQueue has been abandoned!
-        //surfaceTexture.release();
+        surfaceTexture?.detachFromGLContext()
+        surfaceTexture?.release()
         // null everything out so future attempts to use this object will cause an NPE
         eglDisplay = null
         eglContext = null
