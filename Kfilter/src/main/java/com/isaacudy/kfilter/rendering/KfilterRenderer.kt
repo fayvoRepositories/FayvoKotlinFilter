@@ -162,10 +162,10 @@ internal class KfilterRenderer(val kfilter: Kfilter) {
         if (!initialised) initialise()
 
         checkGlError("onDrawFrame start")
-        /*if(!checkGlError("onDrawFrame start")){
+        if(!checkGlError("onDrawFrame start")){
             prepareMedia?.error()
             return
-        }*/
+        }
         st.getTransformMatrix(surfaceMatrix)
 
 
