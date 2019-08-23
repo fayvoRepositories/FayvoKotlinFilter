@@ -276,7 +276,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
     }
 
     //region Rendering
-    private fun openContent() {
+    public fun openContent() {
         synchronized(this) {
             if (contentFile == null) {
                 return
