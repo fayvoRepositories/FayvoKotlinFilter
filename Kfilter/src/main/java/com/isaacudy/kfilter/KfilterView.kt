@@ -255,9 +255,13 @@ class KfilterView @JvmOverloads constructor(context: Context,
         gestureDetector.onTouchEvent(event)
     }
 
+    public var enableAutoPauseStart : Boolean = false
+ 
     override fun onWindowFocusChanged(hasWindowFocus: Boolean) {
         super.onWindowFocusChanged(hasWindowFocus)
 
+        if(enableAutoPauseStart)
+        {
         if (hasWindowFocus) {
             if (isPlayingOnDetach) {
                 mediaPlayer?.start()
@@ -265,8 +269,9 @@ class KfilterView @JvmOverloads constructor(context: Context,
         } else {
             isPlayingOnDetach = mediaPlayer?.isPlaying ?: false
             mediaPlayer?.pause()
-        }
+        }}
     }
+
 
     public fun isPlaying(): Boolean? {
         if (mediaPlayer != null) {
