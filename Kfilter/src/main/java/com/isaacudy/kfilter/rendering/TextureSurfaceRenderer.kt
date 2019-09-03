@@ -67,9 +67,9 @@ internal abstract class TextureSurfaceRenderer(private val texture: SurfaceTextu
                 EGL14.eglSwapBuffers(eglDisplay, eglSurface)
             }
             val waitDelta = 16 - (System.currentTimeMillis() - loopStart)    // Targeting 60 fps, no need for faster
-            if ((waitDelta / 2) > 0) {
+            if ((waitDelta / 4) > 0) {
                 try {
-                    Thread.sleep(waitDelta)
+                    Thread.sleep(waitDelta / 4)
                 }
                 catch (e: InterruptedException) {
                     continue
