@@ -42,7 +42,11 @@ class KfilterView @JvmOverloads constructor(context: Context,
                 mediaPlayer?.let(field)
             }
         }
-    var onErrorListener: (errorCode: Int) -> Unit = { Log.e("KfilterView", "ERROR: $it") }
+    var onErrorListener: (errorCode: Int) -> Unit = {
+        Log.e("KfilterView", "ERROR: $it")
+        prepareMedia?.error()
+    }
+      
     private var lastError = ERROR_NO_ERROR
     var selectedKfilterStart = 0
 
