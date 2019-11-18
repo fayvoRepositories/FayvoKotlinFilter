@@ -614,6 +614,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
 
 
     fun onDown(): Boolean {
+      if (!gesturesEnabled) return false
         if (selectedKfilter == 0) {
             selectedKfilter = kfilters.size
         } else if (selectedKfilter == kfilters.size - 1) {
@@ -625,7 +626,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
 
 
     fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
-
+        if (!gesturesEnabled) return false
         val yDistance: Float = Math.abs(e1.getY() - e2.getY())
 
         val velocityY1 = Math.abs(velocityY)
@@ -652,6 +653,7 @@ class KfilterView @JvmOverloads constructor(context: Context,
     }
 
     fun onScroll(e1: MotionEvent, e2: MotionEvent): Boolean {
+      if (!gesturesEnabled) return false
         val distance = (e1.x - e2.x) / surfaceWidth
         if (e1.x > e2.x) {
             test(true, e1.x, e2.x)
