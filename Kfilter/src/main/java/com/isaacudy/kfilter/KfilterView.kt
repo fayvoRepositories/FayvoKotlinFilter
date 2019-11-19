@@ -1,6 +1,7 @@
 package com.isaacudy.kfilter
 
 import android.animation.ValueAnimator
+import android.app.ActivityManager
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.SurfaceTexture
@@ -317,7 +318,9 @@ class KfilterView @JvmOverloads constructor(context: Context,
         externalTexture.prepareMedia = prepareMedia
         mediaRenderer = KfilterMediaRenderer(texture, surfaceWidth, surfaceHeight, externalTexture).apply {
             setMediaSize(contentFile?.mediaWidth ?: -1, contentFile?.mediaHeight ?: -1)
-            setKfilter(kfilters[selectedKfilter])
+           if(isGlVersionSupported()) {
+                setKfilter(kfilters[selectedKfilter])
+            }
         }
 
         mediaRenderer?.prepareMedia = prepareMedia
@@ -668,5 +671,12 @@ class KfilterView @JvmOverloads constructor(context: Context,
     public interface PrepareMedia {
         fun readyMedia()
         fun error()
+    }
+      
+      private fun isGlVersionSupported(): Boolean {
+        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val configurationInfo = activityManager.deviceConfigurationInfo
+        Log.d("usm_gl_version", "reqGlEsVersion= " + configurationInfo.reqGlEsVersion + " ,getGlEsVersion" + configurationInfo.glEsVersion)
+        return configurationInfo.reqGlEsVersion >= 0x20000
     }
 }
