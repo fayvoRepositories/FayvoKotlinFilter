@@ -9,6 +9,8 @@ package com.isaacudy.kfilter.rendering
 import android.graphics.SurfaceTexture
 import android.opengl.*
 import android.util.Log
+import javax.microedition.khronos.egl.EGL10
+import javax.microedition.khronos.egl.EGL11
 
 //import javax.microedition.khronos.egl.EGL10
 //import javax.microedition.khronos.egl.EGLConfig

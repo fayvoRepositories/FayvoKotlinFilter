@@ -76,6 +76,20 @@ class KfilterView @JvmOverloads constructor(context: Context,
 
     private var isPlayingOnDetach = false
 
+    public fun updateSurface(path : String){
+        var mediaFile = KfilterMediaFile(path)
+        var bitmap = loadBitmap(mediaFile)
+        try {
+            surface?.apply {
+                val canvas = lockCanvas(null)
+                canvas.drawARGB(255, 0, 0, 0)
+                canvas.drawBitmap(bitmap, 0f, 0f, null)
+                unlockCanvasAndPost(canvas)
+            }
+        } catch (e: Exception) {
+        }
+    }
+
     private var offsetAnimator: ValueAnimator? = null
     private var kfilterOffset = 0f
         set(value) {
