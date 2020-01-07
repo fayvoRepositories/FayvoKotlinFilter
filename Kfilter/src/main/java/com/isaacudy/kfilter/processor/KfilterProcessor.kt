@@ -23,6 +23,10 @@ class KfilterProcessor(kfilter: Kfilter, path: String) {
     fun save(saveFilePath: File, saveFile: SaveFile){
         save(saveFilePath.absolutePath, saveFile)
     }
+    
+    public fun cancel(){
+        activeThread?.interrupt()
+    }
 
     fun save(savePath: String, saveFile: SaveFile){
         val finalPath = getSavePathWithExtension(mediaFile.mediaType, savePath)
