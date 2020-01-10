@@ -49,7 +49,7 @@ internal class KfilterVideoProcessor(val shader: Kfilter,
         var muxerAudioTrackIndex: Int = -1
 
         var videoOutputDone = false
-//        var audioOutputDone = false
+        var audioOutputDone = false
 
         var muxerStarted = false
 
@@ -90,16 +90,14 @@ internal class KfilterVideoProcessor(val shader: Kfilter,
             decoder.start()
 
             if (extractor.audioMimeType != null) {
-                audioEncoder = null
-                audioDecoder = null
-                /*val outputAudioFormat = getOutputAudioFormat()
+                val outputAudioFormat = getOutputAudioFormat()
                 audioEncoder = MediaCodec.createEncoderByType(outputAudioFormat.getString(MediaFormat.KEY_MIME))
                 audioEncoder.configure(outputAudioFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
                 audioEncoder.start()
 
                 audioDecoder = MediaCodec.createDecoderByType(extractor.audioMimeType)
                 audioDecoder.configure(extractor.audioFormat, null, null, 0)
-                audioDecoder.start()*/
+                audioDecoder.start()
             }
             else {
                 audioEncoder = null
@@ -119,16 +117,16 @@ internal class KfilterVideoProcessor(val shader: Kfilter,
 
         fun execute() {
             var videoInputDone = false
-//            var audioInputDone = false
+            var audioInputDone = false
             timeout = 10_000L
 
-//            if (extractor.audioExtractor == null) {
-//                audioInputDone = true
-//                audioOutputDone = true
-//            }
+            if (extractor.audioExtractor == null) {
+                audioInputDone = true
+                audioOutputDone = true
+            }
 
             try {
-                while (!videoOutputDone ) {
+                while (!videoOutputDone || !audioOutputDone) {
                     if (!videoOutputDone) {
                         if (!videoInputDone) {
                             videoInputDone = processDecoderInput()
@@ -142,21 +140,22 @@ internal class KfilterVideoProcessor(val shader: Kfilter,
                         }
                     }
 
-//                    val audioExtractor = extractor.audioExtractor
-                    if (
-                            (!muxerStarted || videoOutputDone)) {
-                        /*if (!audioInputDone) {
+                    val audioExtractor = extractor.audioExtractor
+                    if (!audioOutputDone
+                            && (!muxerStarted || videoOutputDone)
+                            && audioExtractor != null
+                            && audioDecoder != null
+                            && audioEncoder != null) {
+                        if (!audioInputDone) {
                             audioInputDone = processAudioDecoderInput(audioDecoder, audioExtractor)
-                        }*/
+                        }
 
                         var audioDecoderOutputAvailable = true
                         var audioEncoderOutputAvailable = true
-                        /*while (audioDecoderOutputAvailable || audioEncoderOutputAvailable) {
-//                            audioEncoderOutputAvailable = processAudioEncoderOutput(audioEncoder, muxer)
-                            audioEncoderOutputAvailable = true
-                            audioDecoderOutputAvailable = true
-//                            audioDecoderOutputAvailable = processAudioDecoderOutput(audioDecoder, audioEncoder)
-                        }*/
+                        while (audioDecoderOutputAvailable || audioEncoderOutputAvailable) {
+                            audioEncoderOutputAvailable = processAudioEncoderOutput(audioEncoder, muxer)
+                            audioDecoderOutputAvailable = processAudioDecoderOutput(audioDecoder, audioEncoder)
+                        }
                     }
                     /**
                      *  !Shout out to Zoe for finding this bug!
@@ -329,7 +328,7 @@ internal class KfilterVideoProcessor(val shader: Kfilter,
 
                 // now that we have the Magic Goodies, start the muxer
                 muxerVideoTrackIndex = muxer.addTrack(newFormat)
-                if (muxerVideoTrackIndex >= 0 /*&& (muxerAudioTrackIndex >= 0 || extractor.audioExtractor == null)*/) {
+                if (muxerVideoTrackIndex >= 0 && (muxerAudioTrackIndex >= 0 || extractor.audioExtractor == null)) {
                     muxer.start()
                     muxerStarted = true
                 }
@@ -399,7 +398,7 @@ internal class KfilterVideoProcessor(val shader: Kfilter,
                 if (bufferInfo.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0) {
                     // forward decoder EOS to encoder
                     if (VERBOSE) Log.d(TAG, "Audio signaling input EOS")
-//                    audioOutputDone = true
+                    audioOutputDone = true
                 }
             }
             else if (outputBufferIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
@@ -534,8 +533,8 @@ internal class KfilterVideoProcessor(val shader: Kfilter,
         val AUDIO_TRACK_TYPE = "audio/"
 
         val videoExtractor: MediaExtractor
-//        var audioExtractor: MediaExtractor?
-//            private set
+        var audioExtractor: MediaExtractor?
+            private set
 
         val videoTrack: Int
         val audioTrack: Int
@@ -563,9 +562,9 @@ internal class KfilterVideoProcessor(val shader: Kfilter,
                 setDataSource(path)
             }
 
-            /*audioExtractor = MediaExtractor().apply {
+            audioExtractor = MediaExtractor().apply {
                 setDataSource(path)
-            }*/
+            }
 
             videoTrack = getTrack(VIDEO_TRACK_TYPE)
             audioTrack = getTrack(AUDIO_TRACK_TYPE)
@@ -589,7 +588,7 @@ internal class KfilterVideoProcessor(val shader: Kfilter,
             videoExtractor.selectTrack(videoTrack)
             videoExtractor.seekTo(0, MediaExtractor.SEEK_TO_CLOSEST_SYNC)
 
-           /* if (audioTrack >= 0) {
+            if (audioTrack >= 0) {
                 audioExtractor?.apply {
                     selectTrack(audioTrack)
                     seekTo(0, MediaExtractor.SEEK_TO_CLOSEST_SYNC)
@@ -597,7 +596,7 @@ internal class KfilterVideoProcessor(val shader: Kfilter,
             }
             else {
                 audioExtractor = null
-            }*/
+            }
         }
 
         fun getTrack(type: String): Int {
