@@ -472,7 +472,7 @@ internal class KfilterVideoProcessor(val shader: Kfilter,
             throw IllegalStateException("File at '$path' has no video track, cannot create output format")
         }
 
-        val mimeType = extractor.videoMimeType
+        val mimeType = "video/avc"
         var width = -1
         var height = -1
         var frameRate = 40
@@ -514,7 +514,7 @@ internal class KfilterVideoProcessor(val shader: Kfilter,
         if (extractor.audioFormat == null) {
             throw IllegalStateException("File at '$path' has no audio track, cannot create output format")
         }
-        val mimeTyoe = extractor.audioMimeType
+        val mimeTyoe = "audio/mp4a-latm"
         val aacProfile = 2
         val channelCount = extractor.audioFormat.getInteger(MediaFormat.KEY_CHANNEL_COUNT)
         val bitrate = 256_000
